@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "template_courses",
+  "info": {
+    "singularName": "template-course",
+    "pluralName": "template-courses",
+    "displayName": "Template_Course"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "price": {
+      "type": "decimal",
+      "default": 0,
+      "min": 0
+    },
+    "notes": {
+      "type": "richtext"
+    },
+    "template_lessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::template-lesson.template-lesson",
+      "mappedBy": "template_course"
+    }
+  }
+}
