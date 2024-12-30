@@ -4,7 +4,8 @@
   "info": {
     "singularName": "lesson",
     "pluralName": "lessons",
-    "displayName": "Lesson"
+    "displayName": "Lesson",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -23,7 +24,7 @@
     "description": {
       "type": "text"
     },
-    "additional_info": {
+    "additionalInfo": {
       "type": "richtext"
     },
     "course": {
@@ -40,6 +41,20 @@
       "relation": "manyToMany",
       "target": "api::feedback.feedback",
       "mappedBy": "lessons"
+    },
+    "students": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::student.student",
+      "mappedBy": "lessons"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "revealed": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

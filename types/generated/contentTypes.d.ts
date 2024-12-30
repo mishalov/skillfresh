@@ -401,6 +401,7 @@ export interface ApiAboutAbout extends Struct.SingleTypeSchema {
 export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
   collectionName: 'courses';
   info: {
+    description: '';
     displayName: 'Course';
     pluralName: 'courses';
     singularName: 'course';
@@ -412,7 +413,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date_start: Schema.Attribute.DateTime;
+    dateStart: Schema.Attribute.DateTime;
     description: Schema.Attribute.Text;
     discount: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
@@ -422,10 +423,18 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
         },
         number
       >;
+    durationMonths: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
     feedbacks: Schema.Attribute.Relation<
       'manyToMany',
       'api::feedback.feedback'
     >;
+    fullPrice: Schema.Attribute.Component<'shared.price', false>;
     leads: Schema.Attribute.Relation<'manyToMany', 'api::lead.lead'>;
     lessons: Schema.Attribute.Relation<'oneToMany', 'api::lesson.lesson'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -434,19 +443,24 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
       'api::course.course'
     > &
       Schema.Attribute.Private;
+    monthPrice: Schema.Attribute.Component<'shared.price', false>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     notes: Schema.Attribute.RichText;
-    notion_link: Schema.Attribute.String;
+    notionLink: Schema.Attribute.String;
     orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
-    price: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Enumeration<
       ['Future', 'In progress', 'Completed']
     > &
       Schema.Attribute.DefaultTo<'Future'>;
+    students: Schema.Attribute.Relation<'manyToMany', 'api::student.student'>;
     teachers: Schema.Attribute.Relation<
       'manyToMany',
       'plugin::users-permissions.user'
+    >;
+    templateCourse: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::template-course.template-course'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -521,6 +535,7 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
 export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   collectionName: 'leads';
   info: {
+    description: '';
     displayName: 'Lead';
     pluralName: 'leads';
     singularName: 'lead';
@@ -529,7 +544,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    additional_info: Schema.Attribute.Text;
+    additionalInfo: Schema.Attribute.Text;
     courses: Schema.Attribute.Relation<'manyToMany', 'api::course.course'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -545,6 +560,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     state: Schema.Attribute.Enumeration<
       ['New', 'In Process', 'Success', 'Lost']
     >;
+    student: Schema.Attribute.Relation<'oneToOne', 'api::student.student'>;
     telegram: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -556,6 +572,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
 export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
   collectionName: 'lessons';
   info: {
+    description: '';
     displayName: 'Lesson';
     pluralName: 'lessons';
     singularName: 'lesson';
@@ -564,7 +581,7 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    additional_info: Schema.Attribute.RichText;
+    additionalInfo: Schema.Attribute.RichText;
     course: Schema.Attribute.Relation<'manyToOne', 'api::course.course'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -589,8 +606,13 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    notionLink: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    revealed: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
     scheduled: Schema.Attribute.DateTime;
+    students: Schema.Attribute.Relation<'manyToMany', 'api::student.student'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -600,6 +622,7 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
 export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   collectionName: 'orders';
   info: {
+    description: '';
     displayName: 'Order';
     pluralName: 'orders';
     singularName: 'order';
@@ -623,7 +646,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
-    payment_method: Schema.Attribute.String & Schema.Attribute.Required;
+    paymentMethod: Schema.Attribute.String & Schema.Attribute.Required;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Enumeration<['Not Paid', 'Paid', 'Canceled']> &
@@ -638,6 +661,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
 export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   collectionName: 'payments';
   info: {
+    description: '';
     displayName: 'Payment';
     pluralName: 'payments';
     singularName: 'payment';
@@ -646,7 +670,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    additional_info: Schema.Attribute.Text;
+    additionalInfo: Schema.Attribute.Text;
     amount: Schema.Attribute.Decimal &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
@@ -665,7 +689,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
-    payment_type: Schema.Attribute.String & Schema.Attribute.Required;
+    paymentType: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Enumeration<['Completed', 'Error']>;
     updatedAt: Schema.Attribute.DateTime;
@@ -674,11 +698,48 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
+  collectionName: 'students';
+  info: {
+    description: '';
+    displayName: 'Student';
+    pluralName: 'students';
+    singularName: 'student';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    courses: Schema.Attribute.Relation<'manyToMany', 'api::course.course'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    lead: Schema.Attribute.Relation<'oneToOne', 'api::lead.lead'>;
+    lessons: Schema.Attribute.Relation<'manyToMany', 'api::lesson.lesson'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student.student'
+    > &
+      Schema.Attribute.Private;
+    password: Schema.Attribute.Password & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    uuid: Schema.Attribute.UID & Schema.Attribute.Required;
+  };
+}
+
 export interface ApiTemplateCourseTemplateCourse
   extends Struct.CollectionTypeSchema {
   collectionName: 'template_courses';
   info: {
-    displayName: 'Template_Course';
+    description: '';
+    displayName: 'TemplateCourse';
     pluralName: 'template-courses';
     singularName: 'template-course';
   };
@@ -686,34 +747,65 @@ export interface ApiTemplateCourseTemplateCourse
     draftAndPublish: true;
   };
   attributes: {
+    courses: Schema.Attribute.Relation<'oneToMany', 'api::course.course'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
+    durationMonths: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    fullPrice: Schema.Attribute.Component<'shared.price', false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::template-course.template-course'
     > &
       Schema.Attribute.Private;
+    monthPrice: Schema.Attribute.Component<'shared.price', false>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     notes: Schema.Attribute.RichText;
-    price: Schema.Attribute.Decimal &
+    notionLink: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    templateLessons: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::template-lesson.template-lesson'
+    >;
+    totalAmountOfLessons: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1>;
+    totalAmountOfWorkshops: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    workshopsPerWeek: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 5;
           min: 0;
         },
         number
       > &
-      Schema.Attribute.DefaultTo<0>;
-    publishedAt: Schema.Attribute.DateTime;
-    template_lessons: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::template-lesson.template-lesson'
-    >;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
+      Schema.Attribute.DefaultTo<1>;
   };
 }
 
@@ -722,7 +814,7 @@ export interface ApiTemplateLessonTemplateLesson
   collectionName: 'template_lessons';
   info: {
     description: '';
-    displayName: 'Template_Lesson';
+    displayName: 'TemplateLesson';
     pluralName: 'template-lessons';
     singularName: 'template-lesson';
   };
@@ -730,7 +822,7 @@ export interface ApiTemplateLessonTemplateLesson
     draftAndPublish: true;
   };
   attributes: {
-    additional_info: Schema.Attribute.RichText;
+    additionalInfo: Schema.Attribute.RichText;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -751,8 +843,9 @@ export interface ApiTemplateLessonTemplateLesson
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
+    notionLink: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    template_course: Schema.Attribute.Relation<
+    templateCourse: Schema.Attribute.Relation<
       'manyToOne',
       'api::template-course.template-course'
     >;
@@ -1217,10 +1310,11 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    businessRole: Schema.Attribute.Enumeration<['teacher', 'admin']> &
+      Schema.Attribute.Required;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     courses: Schema.Attribute.Relation<'manyToMany', 'api::course.course'>;
@@ -1280,6 +1374,7 @@ declare module '@strapi/strapi' {
       'api::lesson.lesson': ApiLessonLesson;
       'api::order.order': ApiOrderOrder;
       'api::payment.payment': ApiPaymentPayment;
+      'api::student.student': ApiStudentStudent;
       'api::template-course.template-course': ApiTemplateCourseTemplateCourse;
       'api::template-lesson.template-lesson': ApiTemplateLessonTemplateLesson;
       'plugin::content-releases.release': PluginContentReleasesRelease;

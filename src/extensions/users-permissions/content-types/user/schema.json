@@ -9,7 +9,7 @@
     "displayName": "User"
   },
   "options": {
-    "timestamps": true
+    "draftAndPublish": false
   },
   "attributes": {
     "username": {
@@ -70,6 +70,14 @@
       "relation": "manyToMany",
       "target": "api::course.course",
       "mappedBy": "teachers"
+    },
+    "businessRole": {
+      "type": "enumeration",
+      "enum": [
+        "teacher",
+        "admin"
+      ],
+      "required": true
     }
   }
 }

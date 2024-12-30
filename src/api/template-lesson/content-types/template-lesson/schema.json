@@ -4,7 +4,7 @@
   "info": {
     "singularName": "template-lesson",
     "pluralName": "template-lessons",
-    "displayName": "Template_Lesson",
+    "displayName": "TemplateLesson",
     "description": ""
   },
   "options": {
@@ -24,14 +24,17 @@
     "description": {
       "type": "text"
     },
-    "template_course": {
+    "additionalInfo": {
+      "type": "richtext"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "templateCourse": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::template-course.template-course",
-      "inversedBy": "template_lessons"
-    },
-    "additional_info": {
-      "type": "richtext"
+      "inversedBy": "templateLessons"
     }
   }
 }

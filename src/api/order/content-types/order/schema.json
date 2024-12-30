@@ -4,7 +4,8 @@
   "info": {
     "singularName": "order",
     "pluralName": "orders",
-    "displayName": "Order"
+    "displayName": "Order",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -26,7 +27,7 @@
       "default": "Not Paid",
       "required": true
     },
-    "payment_method": {
+    "paymentMethod": {
       "type": "string",
       "required": true
     },

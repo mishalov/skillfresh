@@ -4,7 +4,8 @@
   "info": {
     "singularName": "template-course",
     "pluralName": "template-courses",
-    "displayName": "Template_Course"
+    "displayName": "TemplateCourse",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -18,19 +19,56 @@
     "description": {
       "type": "text"
     },
-    "price": {
-      "type": "decimal",
-      "default": 0,
-      "min": 0
-    },
     "notes": {
       "type": "richtext"
     },
-    "template_lessons": {
+    "templateLessons": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::template-lesson.template-lesson",
-      "mappedBy": "template_course"
+      "mappedBy": "templateCourse"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "durationMonths": {
+      "type": "integer",
+      "min": 0
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::course.course",
+      "mappedBy": "templateCourse"
+    },
+    "monthPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "fullPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "workshopsPerWeek": {
+      "type": "integer",
+      "min": 0,
+      "required": true,
+      "max": 5,
+      "default": 1
+    },
+    "totalAmountOfLessons": {
+      "type": "integer",
+      "min": 1,
+      "required": true,
+      "default": 1
+    },
+    "totalAmountOfWorkshops": {
+      "type": "integer",
+      "min": 1,
+      "required": true,
+      "default": 1
     }
   }
 }

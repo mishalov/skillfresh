@@ -4,7 +4,8 @@
   "info": {
     "singularName": "lead",
     "pluralName": "leads",
-    "displayName": "Lead"
+    "displayName": "Lead",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -45,8 +46,14 @@
       "target": "api::course.course",
       "inversedBy": "leads"
     },
-    "additional_info": {
+    "additionalInfo": {
       "type": "text"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::student.student",
+      "mappedBy": "lead"
     }
   }
 }

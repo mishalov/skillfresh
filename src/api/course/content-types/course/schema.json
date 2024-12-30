@@ -4,7 +4,8 @@
   "info": {
     "singularName": "course",
     "pluralName": "courses",
-    "displayName": "Course"
+    "displayName": "Course",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -18,11 +19,7 @@
     "description": {
       "type": "text"
     },
-    "price": {
-      "type": "decimal",
-      "default": 0
-    },
-    "date_start": {
+    "dateStart": {
       "type": "datetime"
     },
     "state": {
@@ -40,7 +37,7 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "courses"
     },
-    "notion_link": {
+    "notionLink": {
       "type": "string"
     },
     "notes": {
@@ -74,6 +71,32 @@
       "relation": "manyToMany",
       "target": "api::feedback.feedback",
       "mappedBy": "courses"
+    },
+    "students": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::student.student",
+      "mappedBy": "courses"
+    },
+    "templateCourse": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::template-course.template-course",
+      "inversedBy": "courses"
+    },
+    "durationMonths": {
+      "type": "integer",
+      "min": 0
+    },
+    "fullPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "monthPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
     }
   }
 }

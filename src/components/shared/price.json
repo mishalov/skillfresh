@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_shared_prices",
+  "info": {
+    "displayName": "Price",
+    "icon": "priceTag"
+  },
+  "options": {},
+  "attributes": {
+    "amount": {
+      "type": "decimal",
+      "min": 0,
+      "required": true
+    },
+    "currency": {
+      "type": "enumeration",
+      "enum": [
+        "czk",
+        "eur",
+        "usd"
+      ]
+    }
+  }
+}

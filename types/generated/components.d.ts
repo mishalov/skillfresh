@@ -11,6 +11,25 @@ export interface SharedMedia extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedPrice extends Struct.ComponentSchema {
+  collectionName: 'components_shared_prices';
+  info: {
+    displayName: 'Price';
+    icon: 'priceTag';
+  };
+  attributes: {
+    amount: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    currency: Schema.Attribute.Enumeration<['czk', 'eur', 'usd']>;
+  };
+}
+
 export interface SharedQuote extends Struct.ComponentSchema {
   collectionName: 'components_shared_quotes';
   info: {
@@ -66,6 +85,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'shared.media': SharedMedia;
+      'shared.price': SharedPrice;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;

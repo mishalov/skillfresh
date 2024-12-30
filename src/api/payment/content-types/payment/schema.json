@@ -4,7 +4,8 @@
   "info": {
     "singularName": "payment",
     "pluralName": "payments",
-    "displayName": "Payment"
+    "displayName": "Payment",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -16,7 +17,7 @@
       "required": true,
       "min": 0
     },
-    "payment_type": {
+    "paymentType": {
       "type": "string",
       "required": true
     },
@@ -33,7 +34,7 @@
       "target": "api::order.order",
       "inversedBy": "payments"
     },
-    "additional_info": {
+    "additionalInfo": {
       "type": "text"
     }
   }
