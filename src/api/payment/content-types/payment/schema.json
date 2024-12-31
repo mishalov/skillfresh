@@ -36,6 +36,12 @@
     },
     "additionalInfo": {
       "type": "text"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::student.student",
+      "inversedBy": "payments"
     }
   }
 }

@@ -97,6 +97,12 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.price"
+    },
+    "template_projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::template-project.template-project",
+      "mappedBy": "courses"
     }
   }
 }

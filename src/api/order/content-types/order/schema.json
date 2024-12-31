@@ -42,6 +42,14 @@
       "relation": "oneToMany",
       "target": "api::payment.payment",
       "mappedBy": "order"
+    },
+    "payer_name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true
     }
   }
 }

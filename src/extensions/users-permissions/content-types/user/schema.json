@@ -78,6 +78,12 @@
         "admin"
       ],
       "required": true
+    },
+    "lesson": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lesson.lesson",
+      "mappedBy": "teacher"
     }
   }
 }
