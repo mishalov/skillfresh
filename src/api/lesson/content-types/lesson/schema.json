@@ -61,6 +61,12 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "lesson"
+    },
+    "templateLesson": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::template-lesson.template-lesson",
+      "inversedBy": "lessons"
     }
   }
 }

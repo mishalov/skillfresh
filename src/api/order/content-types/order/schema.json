@@ -43,13 +43,32 @@
       "target": "api::payment.payment",
       "mappedBy": "order"
     },
-    "payer_name": {
+    "payerName": {
       "type": "string",
       "required": true
     },
     "email": {
       "type": "string",
       "required": true
+    },
+    "paymentPlan": {
+      "type": "enumeration",
+      "enum": [
+        "oneTimePayment",
+        "monthly"
+      ],
+      "required": true
+    },
+    "student": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::student.student",
+      "inversedBy": "orders"
+    },
+    "address": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.address"
     }
   }
 }

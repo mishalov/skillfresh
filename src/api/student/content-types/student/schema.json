@@ -55,6 +55,12 @@
       "relation": "oneToMany",
       "target": "api::project.project",
       "mappedBy": "student"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "student"
     }
   }
 }

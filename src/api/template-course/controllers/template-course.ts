@@ -16,5 +16,13 @@ export default factories.createCoreController(
 
       return { data: dataWithNotifications, meta };
     },
+    async startCourse(ctx) {
+      const { templateCourseDocumentId } = ctx.params;
+      const { date } = ctx.request.body;
+
+      return strapi
+        .service("api::template-course.template-course")
+        .startCourse({ templateCourseDocumentId, date });
+    },
   })
 );

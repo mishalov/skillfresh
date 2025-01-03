@@ -8,17 +8,17 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
     "state": {
       "type": "enumeration",
       "enum": [
-        "New",
-        "In Process",
-        "Success",
-        "Lost"
+        "new",
+        "in process",
+        "success",
+        "lost"
       ]
     },
     "source": {

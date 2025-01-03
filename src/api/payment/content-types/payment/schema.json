@@ -42,6 +42,15 @@
       "relation": "manyToOne",
       "target": "api::student.student",
       "inversedBy": "payments"
+    },
+    "paymentDateTime": {
+      "type": "datetime",
+      "required": true
+    },
+    "transactionId": {
+      "type": "string",
+      "required": true,
+      "unique": true
     }
   }
 }

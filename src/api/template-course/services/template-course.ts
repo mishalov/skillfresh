@@ -19,7 +19,7 @@ const createNotification = (
 
 export default factories.createCoreService(
   "api::template-course.template-course",
-  () => ({
+  ({ strapi }) => ({
     async addNotifications(courseTemplateDetails) {
       let notifications = {};
 
@@ -39,6 +39,84 @@ export default factories.createCoreService(
         ...courseTemplateDetails,
         notifications,
       };
+    },
+    async startCourse({ templateCourseDocumentId, date: dateStart }) {
+      const {
+        name,
+        description,
+        totalAmountOfLessons,
+        notionLink,
+        durationMonths,
+        workshopsPerWeek,
+        totalAmountOfWorkshops,
+        discount,
+        templateLessons,
+        monthPrice,
+        fullPrice,
+      } = await strapi.query("api::template-course.template-course").findOne({
+        where: { documentId: templateCourseDocumentId },
+        select: [
+          "name",
+          "description",
+          "discount",
+          "totalAmountOfLessons",
+          "notionLink",
+          "durationMonths",
+          "workshopsPerWeek",
+          "totalAmountOfWorkshops",
+        ],
+        populate: ["templateLessons.id", "monthPrice", "fullPrice"],
+      });
+
+      const newCourse = await strapi.documents("api::course.course").create({
+        data: {
+          dateStart: new Date(dateStart),
+          name,
+          discount,
+          description,
+          totalAmountOfLessons,
+          notionLink,
+          durationMonths,
+          workshopsPerWeek,
+          totalAmountOfWorkshops,
+          monthPrice: {
+            amount: monthPrice.amount,
+            currency: monthPrice.currency,
+          },
+          fullPrice: {
+            amount: fullPrice.amount,
+            currency: fullPrice.currency,
+          },
+        },
+      });
+
+      const lessons = await Promise.all(
+        templateLessons.map((lesson) =>
+          strapi
+            .service("api::template-lesson.template-lesson")
+            .createLessonFromTemplate({
+              templateLessonDocumentId: lesson.documentId,
+              courseId: newCourse.id,
+            })
+        )
+      );
+
+      const updated = await strapi.documents("api::course.course").update({
+        documentId: newCourse.documentId,
+        data: {
+          lessons,
+        },
+        populate: ["lessons", "monthPrice", "fullPrice"],
+      });
+
+      await strapi.documents("api::course.course").publish({
+        documentId: updated.documentId,
+      });
+
+      return strapi.documents("api::course.course").findOne({
+        documentId: updated.documentId,
+        populate: ["lessons", "monthPrice", "fullPrice"],
+      });
     },
   })
 );

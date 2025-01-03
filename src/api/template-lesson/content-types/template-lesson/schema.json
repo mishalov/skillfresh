@@ -35,6 +35,12 @@
       "relation": "manyToOne",
       "target": "api::template-course.template-course",
       "inversedBy": "templateLessons"
+    },
+    "lessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lesson.lesson",
+      "mappedBy": "templateLesson"
     }
   }
 }

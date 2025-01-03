@@ -545,7 +545,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     singularName: 'lead';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     additionalInfo: Schema.Attribute.Text;
@@ -562,7 +562,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     source: Schema.Attribute.String & Schema.Attribute.Required;
     state: Schema.Attribute.Enumeration<
-      ['New', 'In Process', 'Success', 'Lost']
+      ['new', 'in process', 'success', 'lost']
     >;
     student: Schema.Attribute.Relation<'oneToOne', 'api::student.student'>;
     telegram: Schema.Attribute.String;
@@ -621,6 +621,10 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+    templateLesson: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::template-lesson.template-lesson'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -639,6 +643,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    address: Schema.Attribute.Component<'shared.address', false>;
     amount: Schema.Attribute.Decimal &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
@@ -655,13 +660,16 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
-    payer_name: Schema.Attribute.String & Schema.Attribute.Required;
+    payerName: Schema.Attribute.String & Schema.Attribute.Required;
     paymentMethod: Schema.Attribute.String & Schema.Attribute.Required;
+    paymentPlan: Schema.Attribute.Enumeration<['oneTimePayment', 'monthly']> &
+      Schema.Attribute.Required;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Enumeration<['Not Paid', 'Paid', 'Canceled']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Not Paid'>;
+    student: Schema.Attribute.Relation<'manyToOne', 'api::student.student'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -699,10 +707,14 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
+    paymentDateTime: Schema.Attribute.DateTime & Schema.Attribute.Required;
     paymentType: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Enumeration<['Completed', 'Error']>;
     student: Schema.Attribute.Relation<'manyToOne', 'api::student.student'>;
+    transactionId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -772,6 +784,7 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
       'api::student.student'
     > &
       Schema.Attribute.Private;
+    orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
     password: Schema.Attribute.Password & Schema.Attribute.Required;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
@@ -801,6 +814,15 @@ export interface ApiTemplateCourseTemplateCourse
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
+    discount: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 100;
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
     durationMonths: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -885,6 +907,7 @@ export interface ApiTemplateLessonTemplateLesson
         number
       > &
       Schema.Attribute.DefaultTo<60>;
+    lessons: Schema.Attribute.Relation<'oneToMany', 'api::lesson.lesson'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

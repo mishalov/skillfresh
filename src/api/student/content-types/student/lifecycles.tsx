@@ -1,4 +1,4 @@
-import UnofficialNotionClient from "../../../../services/UnofficialNotion";
+import UnofficialNotionClient from "../../../../services/TelegramApi";
 
 export default {
   async afterCreate(event) {
