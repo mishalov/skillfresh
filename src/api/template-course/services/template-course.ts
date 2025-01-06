@@ -41,6 +41,23 @@ export default factories.createCoreService(
       };
     },
     async startCourse({ templateCourseDocumentId, date: dateStart }) {
+      const templateCourse = await strapi
+        .query("api::template-course.template-course")
+        .findOne({
+          where: { documentId: templateCourseDocumentId },
+          select: [
+            "name",
+            "description",
+            "discount",
+            "totalAmountOfLessons",
+            "notionLink",
+            "durationMonths",
+            "workshopsPerWeek",
+            "totalAmountOfWorkshops",
+          ],
+          populate: ["templateLessons.id", "monthPrice", "fullPrice"],
+        });
+
       const {
         name,
         description,
@@ -53,20 +70,7 @@ export default factories.createCoreService(
         templateLessons,
         monthPrice,
         fullPrice,
-      } = await strapi.query("api::template-course.template-course").findOne({
-        where: { documentId: templateCourseDocumentId },
-        select: [
-          "name",
-          "description",
-          "discount",
-          "totalAmountOfLessons",
-          "notionLink",
-          "durationMonths",
-          "workshopsPerWeek",
-          "totalAmountOfWorkshops",
-        ],
-        populate: ["templateLessons.id", "monthPrice", "fullPrice"],
-      });
+      } = templateCourse;
 
       const newCourse = await strapi.documents("api::course.course").create({
         data: {
@@ -87,6 +91,7 @@ export default factories.createCoreService(
             amount: fullPrice.amount,
             currency: fullPrice.currency,
           },
+          templateCourse,
         },
       });
 
@@ -117,6 +122,30 @@ export default factories.createCoreService(
         documentId: updated.documentId,
         populate: ["lessons", "monthPrice", "fullPrice"],
       });
+    },
+
+    async getAvailableCourses(templateCourseDocumentId: string) {
+      const courses = await strapi.query("api::course.course").findMany({
+        filters: {
+          templateCourse: {
+            documentId: {
+              $eq: templateCourseDocumentId,
+            },
+          },
+          dateStart: {
+            $gte: new Date(),
+          },
+        },
+        select: ["documentId"],
+      });
+
+      return Promise.all(
+        courses.map((course) =>
+          strapi
+            .service("api::course.course")
+            .getPublicCourse(course.documentId)
+        )
+      );
     },
   })
 );

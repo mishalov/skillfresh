@@ -8,5 +8,13 @@ export default {
         auth: false,
       },
     },
+    {
+      method: "GET",
+      path: "/payment-page-data/:courseDocumentId",
+      handler: "course.paymentPageData",
+      config: {
+        auth: false,
+      },
+    },
   ],
 };

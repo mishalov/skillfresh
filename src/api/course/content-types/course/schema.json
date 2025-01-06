@@ -98,11 +98,11 @@
       "repeatable": false,
       "component": "shared.price"
     },
-    "template_projects": {
+    "templateProjects": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::template-project.template-project",
-      "mappedBy": "courses"
+      "inversedBy": "courses"
     }
   }
 }

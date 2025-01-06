@@ -75,6 +75,15 @@
       "min": 0,
       "max": 100,
       "default": 0
+    },
+    "participantsLimit": {
+      "type": "integer",
+      "min": 0
+    },
+    "isMonthlyPaymentAvailable": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

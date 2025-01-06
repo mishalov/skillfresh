@@ -22,18 +22,18 @@
     "description": {
       "type": "text"
     },
-    "courses": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::course.course",
-      "inversedBy": "template_projects"
-    },
     "durationDays": {
       "type": "integer",
       "required": true
     },
     "additionalInfo": {
       "type": "richtext"
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::course.course",
+      "mappedBy": "templateProjects"
     }
   }
 }

@@ -458,13 +458,13 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
       'manyToMany',
       'plugin::users-permissions.user'
     >;
-    template_projects: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::template-project.template-project'
-    >;
     templateCourse: Schema.Attribute.Relation<
       'manyToOne',
       'api::template-course.template-course'
+    >;
+    templateProjects: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::template-project.template-project'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -831,6 +831,9 @@ export interface ApiTemplateCourseTemplateCourse
         number
       >;
     fullPrice: Schema.Attribute.Component<'shared.price', false>;
+    isMonthlyPaymentAvailable: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -841,6 +844,13 @@ export interface ApiTemplateCourseTemplateCourse
     name: Schema.Attribute.String & Schema.Attribute.Required;
     notes: Schema.Attribute.RichText;
     notionLink: Schema.Attribute.String;
+    participantsLimit: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
     publishedAt: Schema.Attribute.DateTime;
     templateLessons: Schema.Attribute.Relation<
       'oneToMany',

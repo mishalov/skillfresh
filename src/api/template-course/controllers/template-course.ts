@@ -24,5 +24,15 @@ export default factories.createCoreController(
         .service("api::template-course.template-course")
         .startCourse({ templateCourseDocumentId, date });
     },
+
+    async availableCourses(ctx) {
+      const { courseTemplateDocumentId } = ctx.params;
+
+      const courses = await strapi
+        .service("api::template-course.template-course")
+        .getAvailableCourses(courseTemplateDocumentId);
+
+      return courses;
+    },
   })
 );

@@ -12,10 +12,16 @@ export default factories.createCoreController(
 
       const course = await strapi
         .service("api::course.course")
-        .findOne({ documentId });
-      console.log("course: ", course);
+        .getPublicCourse(documentId);
 
       return course;
+    },
+    async paymentPageData(ctx) {
+      const { courseDocumentId } = ctx.params;
+
+      return strapi
+        .service("api::course.course")
+        .getCoursePaymentPageData(courseDocumentId);
     },
   })
 );
