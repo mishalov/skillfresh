@@ -12,20 +12,17 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "amount": {
-      "type": "decimal",
-      "required": true,
-      "min": 0
-    },
-    "paymentType": {
+    "paymentMethod": {
       "type": "string",
       "required": true
     },
     "state": {
       "type": "enumeration",
       "enum": [
+        "New",
         "Completed",
-        "Error"
+        "Error",
+        "Future"
       ]
     },
     "order": {
@@ -37,20 +34,19 @@
     "additionalInfo": {
       "type": "text"
     },
-    "student": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::student.student",
-      "inversedBy": "payments"
-    },
-    "paymentDateTime": {
+    "paymentDueDate": {
       "type": "datetime",
       "required": true
     },
     "transactionId": {
       "type": "string",
-      "required": true,
+      "required": false,
       "unique": true
+    },
+    "value": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
     }
   }
 }

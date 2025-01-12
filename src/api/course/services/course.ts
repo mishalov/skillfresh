@@ -10,8 +10,8 @@ export default factories.createCoreService(
     async getPublicCourse(documentId) {
       const course = await strapi.documents("api::course.course").findOne({
         documentId,
-        fields: ["name", "dateStart", "durationMonths", "discount"],
-        populate: ["templateCourse", "fullPrice", "monthPrice"],
+        fields: ["name", "dateStart", "durationMonths"],
+        populate: ["templateCourse", "monthPrice", "fullPrice"],
       });
 
       return {
@@ -21,10 +21,12 @@ export default factories.createCoreService(
         },
       };
     },
+
     async getCoursePaymentPageData(courseDocumentId) {
       const course = await strapi
         .service("api::course.course")
         .getPublicCourse(courseDocumentId);
+      console.log("course: ", course);
 
       const availableCourses = await strapi
         .service("api::template-course.template-course")

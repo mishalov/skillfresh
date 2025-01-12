@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_shared_stripe_price_data",
+  "info": {
+    "displayName": "StripePriceData",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "monthPriceId": {
+      "type": "string",
+      "required": true
+    },
+    "fullPriceId": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

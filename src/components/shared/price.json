@@ -2,7 +2,8 @@
   "collectionName": "components_shared_prices",
   "info": {
     "displayName": "Price",
-    "icon": "priceTag"
+    "icon": "priceTag",
+    "description": ""
   },
   "options": {},
   "attributes": {
@@ -17,7 +18,9 @@
         "czk",
         "eur",
         "usd"
-      ]
+      ],
+      "required": true,
+      "default": "czk"
     }
   }
 }

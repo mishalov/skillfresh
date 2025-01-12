@@ -54,6 +54,15 @@
       "relation": "oneToOne",
       "target": "api::student.student",
       "mappedBy": "lead"
+    },
+    "referalId": {
+      "type": "string"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "lead"
     }
   }
 }

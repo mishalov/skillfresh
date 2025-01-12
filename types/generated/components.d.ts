@@ -28,6 +28,7 @@ export interface SharedMedia extends Struct.ComponentSchema {
 export interface SharedPrice extends Struct.ComponentSchema {
   collectionName: 'components_shared_prices';
   info: {
+    description: '';
     displayName: 'Price';
     icon: 'priceTag';
   };
@@ -40,7 +41,9 @@ export interface SharedPrice extends Struct.ComponentSchema {
         },
         number
       >;
-    currency: Schema.Attribute.Enumeration<['czk', 'eur', 'usd']>;
+    currency: Schema.Attribute.Enumeration<['czk', 'eur', 'usd']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'czk'>;
   };
 }
 
@@ -95,6 +98,30 @@ export interface SharedSlider extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedStripeData extends Struct.ComponentSchema {
+  collectionName: 'components_shared_stripe_data';
+  info: {
+    description: '';
+    displayName: 'StripeData';
+  };
+  attributes: {
+    stripeProductIdFull: Schema.Attribute.String & Schema.Attribute.Required;
+    stripeProductIdMonthly: Schema.Attribute.String;
+  };
+}
+
+export interface SharedStripePriceData extends Struct.ComponentSchema {
+  collectionName: 'components_shared_stripe_price_data';
+  info: {
+    description: '';
+    displayName: 'StripePriceData';
+  };
+  attributes: {
+    fullPriceId: Schema.Attribute.String & Schema.Attribute.Required;
+    monthPriceId: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -105,6 +132,8 @@ declare module '@strapi/strapi' {
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;
+      'shared.stripe-data': SharedStripeData;
+      'shared.stripe-price-data': SharedStripePriceData;
     }
   }
 }

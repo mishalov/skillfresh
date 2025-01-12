@@ -3,6 +3,10 @@
  */
 
 import { factories } from "@strapi/strapi";
+import {
+  createFullPriceStripe,
+  createMonthPriceStripe,
+} from "../../../services/StripeApi";
 
 const createNotification = (
   obj: object,
@@ -42,10 +46,10 @@ export default factories.createCoreService(
     },
     async startCourse({ templateCourseDocumentId, date: dateStart }) {
       const templateCourse = await strapi
-        .query("api::template-course.template-course")
+        .documents("api::template-course.template-course")
         .findOne({
-          where: { documentId: templateCourseDocumentId },
-          select: [
+          documentId: templateCourseDocumentId,
+          fields: [
             "name",
             "description",
             "discount",
@@ -55,7 +59,12 @@ export default factories.createCoreService(
             "workshopsPerWeek",
             "totalAmountOfWorkshops",
           ],
-          populate: ["templateLessons.id", "monthPrice", "fullPrice"],
+          populate: [
+            "templateLessons",
+            "monthPrice",
+            "fullPrice",
+            "stripeProductData",
+          ],
         });
 
       const {
@@ -70,7 +79,18 @@ export default factories.createCoreService(
         templateLessons,
         monthPrice,
         fullPrice,
+        stripeProductData,
       } = templateCourse;
+
+      const subscriptionStripeData = await createMonthPriceStripe({
+        monthPrice,
+        productId: stripeProductData.stripeProductIdMonthly,
+      });
+
+      const fullPriceStripeData = await createFullPriceStripe({
+        fullPrice,
+        productId: stripeProductData.stripeProductIdFull,
+      });
 
       const newCourse = await strapi.documents("api::course.course").create({
         data: {
@@ -92,6 +112,10 @@ export default factories.createCoreService(
             currency: fullPrice.currency,
           },
           templateCourse,
+          stripePriceData: {
+            fullPriceId: fullPriceStripeData?.id,
+            monthPriceId: subscriptionStripeData?.id,
+          },
         },
       });
 
@@ -111,7 +135,7 @@ export default factories.createCoreService(
         data: {
           lessons,
         },
-        populate: ["lessons", "monthPrice", "fullPrice"],
+        populate: ["lessons"],
       });
 
       await strapi.documents("api::course.course").publish({
@@ -120,7 +144,7 @@ export default factories.createCoreService(
 
       return strapi.documents("api::course.course").findOne({
         documentId: updated.documentId,
-        populate: ["lessons", "monthPrice", "fullPrice"],
+        populate: ["lessons"],
       });
     },
 

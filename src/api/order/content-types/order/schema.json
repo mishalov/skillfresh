@@ -12,11 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "amount": {
-      "type": "decimal",
-      "required": true,
-      "min": 0
-    },
     "state": {
       "type": "enumeration",
       "enum": [
@@ -69,6 +64,28 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.address"
+    },
+    "value": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "lead": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lead.lead",
+      "inversedBy": "orders"
+    },
+    "countOfPayments": {
+      "type": "integer",
+      "required": true,
+      "min": 0,
+      "default": 1
+    },
+    "orderNumber": {
+      "type": "integer",
+      "unique": true,
+      "min": 0
     }
   }
 }

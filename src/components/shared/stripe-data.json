@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_shared_stripe_data",
+  "info": {
+    "displayName": "StripeData",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "stripeProductIdFull": {
+      "type": "string",
+      "required": true
+    },
+    "stripeProductIdMonthly": {
+      "type": "string"
+    }
+  }
+}
