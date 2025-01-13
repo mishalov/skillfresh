@@ -1,3 +1,4 @@
+import { stripeApi } from "../../../services/StripeApi";
 import order from "../../order/controllers/order";
 
 export default {
@@ -75,36 +76,12 @@ export default {
     });
   },
 
-  async success(ctx) {
-    const { paymentDocumentId } = ctx.params;
+  async confirm(ctx) {
+    const { paymentDocumentId, sessionId } = ctx.query;
 
-    const payment = await strapi
-      .service("api::payment.payment")
-      .findOne(paymentDocumentId, { populate: ["order"] });
-
-    const order = await strapi
-      .service("api::order.order")
-      .findOne(payment.order.documentId, {
-        populate: {
-          lead: {
-            populate: ["user"],
-          },
-          stripePriceData: {
-            populate: ["fullPrice", "monthPrice"],
-          },
-        },
-      });
-
-    if (order) {
-      await strapi.documents("api::order.order").update({
-        documentId: order.documentId,
-        data: {
-          state: "Paid",
-        },
-      });
-    }
-
-    return { success: true };
+    return await strapi
+      .service("api::checkout.checkout")
+      .confirmPayment({ paymentDocumentId, sessionId });
   },
 
   async bankTransferPaymentInfo(ctx) {

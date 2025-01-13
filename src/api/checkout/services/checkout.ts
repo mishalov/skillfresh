@@ -1,10 +1,6 @@
-import { addDays } from "date-fns";
+import { addDays, addMonths } from "date-fns";
 import { stripeApi } from "../../../services/StripeApi";
-import {
-  buildBankPaymentDetailsUrl,
-  buildCancelUrl,
-  buildSuccessUrl,
-} from "../../../utils/buildRoutes";
+import { buildCancelUrl, buildSuccessUrl } from "../../../utils/buildRoutes";
 
 export default {
   async start({ order }) {
@@ -24,7 +20,7 @@ export default {
   async startFullPricePayment({ order }): Promise<StartCheckoutResponse> {
     const {
       course: { stripePriceData },
-      fullPrice,
+      value,
       paymentMethod,
       email,
     } = order;
@@ -32,7 +28,7 @@ export default {
     const payment = await strapi.documents("api::payment.payment").create({
       data: {
         paymentMethod,
-        value: fullPrice,
+        value,
         order: order.documentId,
         state: "New",
         paymentDueDate: addDays(new Date(), 3),
@@ -54,15 +50,14 @@ export default {
         },
       ],
       mode: "payment",
-      success_url: buildSuccessUrl(order.documentId, payment.documentId),
-      cancel_url: buildCancelUrl(order.documentId),
+      success_url: buildSuccessUrl(payment.documentId),
+      cancel_url: buildCancelUrl(payment.documentId),
       customer_email: email,
       metadata: {
         paymentId: payment.documentId,
         orderNumber: order.orderNumber,
       },
     });
-    console.log("session: ", session);
 
     return {
       redirectUrl: session.url,
@@ -74,51 +69,37 @@ export default {
   async startMonthlyPayment({ order }) {
     const {
       course: { stripePriceData },
-      monthPrice,
+      value,
       paymentMethod,
       email,
       course,
+      orderNumber,
     } = order;
 
     const firstPayment = await strapi.documents("api::payment.payment").create({
       data: {
+        value,
         paymentMethod,
-        value: monthPrice,
         order: order.documentId,
         state: "New",
         paymentDueDate: addDays(new Date(), 3),
       },
     });
+    const paymentDocumentId = firstPayment.documentId;
+    const orderDocumentId = order.documentId;
 
     const payments = [];
     for (let i = 1; i < course.durationMonths; i++) {
       const payment = await strapi.documents("api::payment.payment").create({
         data: {
+          value,
           paymentMethod,
-          value: monthPrice,
-          order: order.documentId,
+          order: orderDocumentId,
           state: "Future",
           paymentDueDate: addDays(new Date(), 3 + i * 30),
         },
       });
       payments.push(payment);
-    }
-
-    if (paymentMethod === "transfer") {
-      const session = await stripeApi.checkout.sessions.create({
-        line_items: [
-          {
-            price: stripePriceData.monthPriceId,
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        success_url: buildSuccessUrl(order.documentId, firstPayment.documentId),
-        cancel_url: buildCancelUrl(order.documentId),
-        customer_email: email,
-        payment_method_options: {},
-      });
-      return session;
     }
 
     const session = await stripeApi.checkout.sessions.create({
@@ -128,11 +109,21 @@ export default {
           quantity: 1,
         },
       ],
-      mode: "subscription",
-      success_url: buildSuccessUrl(order.documentId, firstPayment.documentId),
-      cancel_url: buildCancelUrl(order.documentId),
+      mode: paymentMethod === "transfer" ? "payment" : "subscription",
+      success_url: buildSuccessUrl(paymentDocumentId),
+      cancel_url: buildCancelUrl(paymentDocumentId),
       customer_email: email,
+      metadata: {
+        paymentId: paymentDocumentId,
+        orderNumber: orderNumber,
+      },
     });
+
+    return {
+      redirectUrl: session.url,
+      paymentDocumentId: paymentDocumentId,
+      orderDocumentId: orderDocumentId,
+    };
   },
   async bankTransferPaymentInfo(paymentId) {
     const payment = await strapi.documents("api::payment.payment").findOne({
@@ -178,6 +169,63 @@ export default {
       courseName,
       dateStart,
       paymentPlan,
+    };
+  },
+
+  async confirmPayment({ paymentDocumentId, sessionId }) {
+    const stripePayment = await stripeApi.checkout.sessions.retrieve(sessionId);
+
+    if (
+      !stripePayment ||
+      !(stripePayment.metadata.paymentId === paymentDocumentId)
+    ) {
+      return { success: false, message: "Payment not found or invalid" };
+    }
+
+    if (stripePayment.payment_status !== "paid") {
+      return { success: false, message: "Payment not paid" };
+    }
+
+    const payment = await strapi.documents("api::payment.payment").update({
+      documentId: paymentDocumentId,
+      data: {
+        state: "Completed",
+      },
+      populate: {
+        order: {
+          populate: {
+            course: {
+              fields: ["name", "dateStart", "durationMonths"],
+              populate: ["stripePriceData"],
+            },
+          },
+        },
+      },
+    });
+
+    if (stripePayment.mode === "subscription") {
+      await stripeApi.subscriptionSchedules.create({
+        customer: stripePayment.customer.toString(),
+        end_behavior: "cancel",
+        start_date: Math.trunc(addMonths(new Date(), 1).getTime() / 1000),
+        phases: [
+          {
+            items: [
+              {
+                price: payment.order.course.stripePriceData.monthPriceId,
+              },
+            ],
+            iterations: payment.order.course.durationMonths - 1,
+          },
+        ],
+      });
+    }
+
+    return {
+      email: payment.order.email,
+      courseName: payment.order.course.name,
+      startDate: payment.order.course.dateStart,
+      success: true,
     };
   },
 };

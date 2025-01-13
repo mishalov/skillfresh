@@ -13,7 +13,7 @@ export default factories.createCoreService("api::lead.lead", ({ strapi }) => {
       if (result) {
         telegramApi.notifyAboutLead({
           ...inputs.data,
-          link: `${process.env.HOSTNAME}:${process.env.PORT}/admin/content-manager/collection-types/api::lead.lead/${result.documentId}`,
+          link: `${process.env.FRONTEND_HOSTNAME}:${process.env.PORT}/admin/content-manager/collection-types/api::lead.lead/${result.documentId}`,
         });
       }
       return result;

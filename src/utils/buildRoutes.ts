@@ -1,9 +1,6 @@
-export const appUrl = `http://${process.env.HOSTNAME}:${process.env.PORT}`;
-export const buildSuccessUrl = (orderId: string, paymentId: string) =>
-  `${appUrl}/checkout/success?orderDocumentId=${orderId}&paymentDocumentId=${paymentId}`;
+export const appUrl = `http://${process.env.FRONTEND_HOSTNAME}`;
+export const buildSuccessUrl = (paymentId: string) =>
+  `${appUrl}/payment/card/success?paymentDocumentId=${paymentId}&sessionId={CHECKOUT_SESSION_ID}`;
 
-export const buildCancelUrl = (orderId: string) =>
-  `${appUrl}/checkout/cancel?orderDocumentId=${orderId}`;
-
-export const buildBankPaymentDetailsUrl = (paymentDocumentId: string) =>
-  `${appUrl}/checkout/bank-transfer/requires_action/${paymentDocumentId}`;
+export const buildCancelUrl = (paymentId: string) =>
+  `${appUrl}/payment/card/cancel?paymentDocumentId=${paymentId}`;

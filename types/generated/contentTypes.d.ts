@@ -640,7 +640,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     singularName: 'order';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     address: Schema.Attribute.Component<'shared.address', false>;
@@ -676,7 +676,9 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
-    state: Schema.Attribute.Enumeration<['Not Paid', 'Paid', 'Canceled']> &
+    state: Schema.Attribute.Enumeration<
+      ['Not Paid', 'Paid', 'Canceled', 'Partially paid']
+    > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Not Paid'>;
     student: Schema.Attribute.Relation<'manyToOne', 'api::student.student'>;
@@ -696,7 +698,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     singularName: 'payment';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     additionalInfo: Schema.Attribute.Text;

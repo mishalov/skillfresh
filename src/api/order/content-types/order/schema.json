@@ -8,7 +8,7 @@
     "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -17,7 +17,8 @@
       "enum": [
         "Not Paid",
         "Paid",
-        "Canceled"
+        "Canceled",
+        "Partially paid"
       ],
       "default": "Not Paid",
       "required": true

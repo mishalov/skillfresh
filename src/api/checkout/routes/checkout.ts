@@ -11,9 +11,9 @@ export default {
       },
     },
     {
-      method: "POST",
-      path: "/checkout/success/:orderDocumentId",
-      handler: "checkout.success",
+      method: "GET",
+      path: "/checkout/confirm",
+      handler: "checkout.confirm",
       config: {
         auth: false,
       },
