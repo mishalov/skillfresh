@@ -3,6 +3,7 @@
  */
 
 import { factories } from "@strapi/strapi";
+import { stripeApi } from "../../../services/StripeApi";
 
 export default factories.createCoreController(
   "api::course.course",
