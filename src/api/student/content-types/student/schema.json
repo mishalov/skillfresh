@@ -22,13 +22,7 @@
       "target": "api::course.course",
       "inversedBy": "students"
     },
-    "lessons": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::lesson.lesson",
-      "inversedBy": "students"
-    },
-    "lead": {
+    "fromLead": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::lead.lead",

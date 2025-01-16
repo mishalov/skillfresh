@@ -42,12 +42,6 @@
       "target": "api::feedback.feedback",
       "mappedBy": "lessons"
     },
-    "students": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::student.student",
-      "mappedBy": "lessons"
-    },
     "notionLink": {
       "type": "string"
     },

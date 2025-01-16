@@ -49,12 +49,6 @@
     "additionalInfo": {
       "type": "text"
     },
-    "student": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::student.student",
-      "mappedBy": "lead"
-    },
     "referalId": {
       "type": "string"
     },
@@ -63,6 +57,12 @@
       "relation": "oneToMany",
       "target": "api::order.order",
       "mappedBy": "lead"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::student.student",
+      "mappedBy": "fromLead"
     }
   }
 }

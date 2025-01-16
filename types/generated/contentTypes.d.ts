@@ -616,7 +616,6 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
     scheduled: Schema.Attribute.DateTime;
-    students: Schema.Attribute.Relation<'manyToMany', 'api::student.student'>;
     teacher: Schema.Attribute.Relation<
       'oneToOne',
       'plugin::users-permissions.user'
@@ -781,8 +780,7 @@ export interface ApiStudentStudent extends Struct.CollectionTypeSchema {
     email: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
-    lead: Schema.Attribute.Relation<'oneToOne', 'api::lead.lead'>;
-    lessons: Schema.Attribute.Relation<'manyToMany', 'api::lesson.lesson'>;
+    fromLead: Schema.Attribute.Relation<'oneToOne', 'api::lead.lead'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
