@@ -8,16 +8,18 @@ export default factories.createCoreService(
   "api::template-lesson.template-lesson",
   ({ strapi }) => ({
     async createLessonFromTemplate({ templateLessonDocumentId, courseId }) {
-      const { name, duration, description, additionalInfo, notionLink } =
+      const { name, duration, description, innerInfo, notionLink, chapter } =
         await strapi.documents("api::template-lesson.template-lesson").findOne({
           documentId: templateLessonDocumentId,
           select: [
             "name",
+            "cover",
             "duration",
             "description",
-            "additionalInfo",
+            "innerInfo",
             "notionLink",
           ],
+          populate: ["chapter"],
         });
 
       const lesson = await strapi.documents("api::lesson.lesson").create({
@@ -25,12 +27,13 @@ export default factories.createCoreService(
           name,
           duration,
           description,
-          additionalInfo,
+          innerInfo,
           notionLink,
           course: courseId,
           publishedAt: new Date(),
           revealed: false,
           templateLesson: templateLessonDocumentId,
+          chapter,
         },
         populate: ["course", "templateLesson"],
       });

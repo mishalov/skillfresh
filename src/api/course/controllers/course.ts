@@ -3,7 +3,6 @@
  */
 
 import { factories } from "@strapi/strapi";
-import { stripeApi } from "../../../services/StripeApi";
 
 export default factories.createCoreController(
   "api::course.course",
@@ -17,12 +16,33 @@ export default factories.createCoreController(
 
       return course;
     },
+
     async paymentPageData(ctx) {
       const { courseDocumentId } = ctx.params;
 
       return strapi
         .service("api::course.course")
         .getCoursePaymentPageData(courseDocumentId);
+    },
+
+    async myCourses(ctx) {
+      const user = ctx.state.user;
+
+      const courses = await strapi
+        .service("api::course.course")
+        .getUserCourses(user.documentId);
+
+      return courses.coursesAsStudent;
+    },
+
+    async myCourse(ctx) {
+      const user = ctx.state.user;
+
+      const course = await strapi
+        .service("api::course.course")
+        .getUserDefaultCourse(user.documentId);
+
+      return course;
     },
   })
 );

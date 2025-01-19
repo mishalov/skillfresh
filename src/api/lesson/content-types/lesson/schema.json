@@ -21,11 +21,9 @@
       "min": 15,
       "default": 60
     },
-    "description": {
-      "type": "text"
-    },
-    "additionalInfo": {
-      "type": "richtext"
+    "innerInfo": {
+      "type": "richtext",
+      "private": true
     },
     "course": {
       "type": "relation",
@@ -61,6 +59,14 @@
       "relation": "manyToOne",
       "target": "api::template-lesson.template-lesson",
       "inversedBy": "lessons"
+    },
+    "description": {
+      "type": "text"
+    },
+    "chapter": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::chapter.chapter"
     }
   }
 }

@@ -91,6 +91,14 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.stripe-data"
+    },
+    "cover": {
+      "allowedTypes": [
+        "files",
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

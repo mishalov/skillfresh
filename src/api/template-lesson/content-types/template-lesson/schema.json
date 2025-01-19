@@ -24,7 +24,7 @@
     "description": {
       "type": "text"
     },
-    "additionalInfo": {
+    "innerInfo": {
       "type": "richtext"
     },
     "notionLink": {
@@ -41,6 +41,14 @@
       "relation": "oneToMany",
       "target": "api::lesson.lesson",
       "mappedBy": "templateLesson"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "chapter": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::chapter.chapter"
     }
   }
 }

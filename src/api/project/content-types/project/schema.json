@@ -34,11 +34,11 @@
     "reviewResult": {
       "type": "blocks"
     },
-    "student": {
+    "users": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::student.student",
-      "inversedBy": "projects"
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "projects"
     }
   }
 }

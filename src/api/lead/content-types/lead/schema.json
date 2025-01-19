@@ -58,10 +58,10 @@
       "target": "api::order.order",
       "mappedBy": "lead"
     },
-    "student": {
+    "user": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::student.student",
+      "target": "plugin::users-permissions.user",
       "mappedBy": "fromLead"
     }
   }

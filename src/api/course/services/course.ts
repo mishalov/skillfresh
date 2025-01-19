@@ -37,5 +37,25 @@ export default factories.createCoreService(
         availableCourses,
       };
     },
+
+    async getUserCourses(userDocumentId) {
+      return strapi.documents("plugin::users-permissions.user").findOne({
+        documentId: userDocumentId,
+        fields: [],
+        populate: ["coursesAsStudent"],
+      });
+    },
+
+    async getUserDefaultCourse(userDocumentId) {
+      const user = await strapi
+        .documents("plugin::users-permissions.user")
+        .findOne({
+          documentId: userDocumentId,
+          fields: [],
+          populate: ["defaultCourse"],
+        });
+
+      return user.defaultCourse;
+    },
   })
 );

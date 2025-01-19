@@ -55,12 +55,6 @@
       ],
       "required": true
     },
-    "student": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::student.student",
-      "inversedBy": "orders"
-    },
     "address": {
       "type": "component",
       "repeatable": false,
@@ -87,6 +81,12 @@
       "type": "integer",
       "unique": true,
       "min": 0
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "orders"
     }
   }
 }

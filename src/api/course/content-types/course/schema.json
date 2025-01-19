@@ -31,12 +31,6 @@
       ],
       "default": "Future"
     },
-    "teachers": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "courses"
-    },
     "notionLink": {
       "type": "string"
     },
@@ -65,12 +59,6 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::feedback.feedback",
-      "mappedBy": "courses"
-    },
-    "students": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::student.student",
       "mappedBy": "courses"
     },
     "templateCourse": {
@@ -106,6 +94,23 @@
       "repeatable": false,
       "component": "shared.stripe-price-data",
       "required": true
+    },
+    "students": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "coursesAsStudent"
+    },
+    "teachers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "coursesAsTeacher"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": false
     }
   }
 }

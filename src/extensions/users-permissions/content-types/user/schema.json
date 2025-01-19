@@ -65,25 +65,46 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "courses": {
+    "coursesAsTeacher": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::course.course",
-      "mappedBy": "teachers"
-    },
-    "businessRole": {
-      "type": "enumeration",
-      "enum": [
-        "teacher",
-        "admin"
-      ],
-      "required": true
+      "inversedBy": "teachers"
     },
     "lesson": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::lesson.lesson",
       "mappedBy": "teacher"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "user"
+    },
+    "fromLead": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lead.lead",
+      "inversedBy": "user"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "inversedBy": "users"
+    },
+    "coursesAsStudent": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::course.course",
+      "mappedBy": "students"
+    },
+    "defaultCourse": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::course.course"
     }
   }
 }

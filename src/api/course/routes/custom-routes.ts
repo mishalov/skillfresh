@@ -16,5 +16,15 @@ export default {
         auth: false,
       },
     },
+    {
+      method: "GET",
+      path: "/my-courses",
+      handler: "course.myCourses",
+    },
+    {
+      method: "GET",
+      path: "/my-course",
+      handler: "course.myCourse",
+    },
   ],
 };
