@@ -71,12 +71,6 @@
       "target": "api::course.course",
       "inversedBy": "teachers"
     },
-    "lesson": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::lesson.lesson",
-      "mappedBy": "teacher"
-    },
     "orders": {
       "type": "relation",
       "relation": "oneToMany",

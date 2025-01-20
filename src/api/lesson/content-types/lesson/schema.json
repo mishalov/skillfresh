@@ -48,12 +48,6 @@
       "default": false,
       "required": true
     },
-    "teacher": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "lesson"
-    },
     "templateLesson": {
       "type": "relation",
       "relation": "manyToOne",

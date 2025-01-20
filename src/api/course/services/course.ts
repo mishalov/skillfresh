@@ -52,10 +52,31 @@ export default factories.createCoreService(
         .findOne({
           documentId: userDocumentId,
           fields: [],
-          populate: ["defaultCourse"],
+          populate: {
+            coursesAsStudent: {
+              fields: ["name", "dateStart", "durationMonths", "description"],
+              populate: [
+                "templateCourse",
+                "monthPrice",
+                "fullPrice",
+                "lessons",
+                "cover",
+              ],
+            },
+            defaultCourse: {
+              fields: ["name", "dateStart", "durationMonths", "description"],
+              populate: [
+                "templateCourse",
+                "monthPrice",
+                "fullPrice",
+                "lessons",
+                "cover",
+              ],
+            },
+          },
         });
 
-      return user.defaultCourse;
+      return user.defaultCourse || user.coursesAsStudent[0];
     },
   })
 );

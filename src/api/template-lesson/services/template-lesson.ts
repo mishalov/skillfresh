@@ -13,7 +13,6 @@ export default factories.createCoreService(
           documentId: templateLessonDocumentId,
           select: [
             "name",
-            "cover",
             "duration",
             "description",
             "innerInfo",

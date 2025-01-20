@@ -58,12 +58,14 @@ export default factories.createCoreService(
             "durationMonths",
             "workshopsPerWeek",
             "totalAmountOfWorkshops",
+            "workshopDuration",
           ],
           populate: [
             "templateLessons",
             "monthPrice",
             "fullPrice",
             "stripeProductData",
+            "cover",
           ],
         });
 
@@ -80,6 +82,8 @@ export default factories.createCoreService(
         monthPrice,
         fullPrice,
         stripeProductData,
+        cover,
+        workshopDuration,
       } = templateCourse;
 
       const subscriptionStripeData = await createMonthPriceStripe({
@@ -116,6 +120,8 @@ export default factories.createCoreService(
             fullPriceId: fullPriceStripeData?.id,
             monthPriceId: subscriptionStripeData?.id,
           },
+          cover,
+          workshopDuration,
         },
       });
 

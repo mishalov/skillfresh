@@ -93,12 +93,17 @@
       "component": "shared.stripe-data"
     },
     "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "files",
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "workshopDuration": {
+      "type": "integer",
+      "required": true
     }
   }
 }

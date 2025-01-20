@@ -441,6 +441,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    cover: Schema.Attribute.Media<'images' | 'files'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -502,6 +503,13 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    workshopDuration: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
   };
 }
 
@@ -655,10 +663,6 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
     scheduled: Schema.Attribute.DateTime;
-    teacher: Schema.Attribute.Relation<
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
     templateLesson: Schema.Attribute.Relation<
       'manyToOne',
       'api::template-lesson.template-lesson'
@@ -890,6 +894,7 @@ export interface ApiTemplateCourseTemplateCourse
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    workshopDuration: Schema.Attribute.Integer & Schema.Attribute.Required;
     workshopsPerWeek: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
@@ -1464,7 +1469,6 @@ export interface PluginUsersPermissionsUser
         minLength: 6;
       }>;
     fromLead: Schema.Attribute.Relation<'oneToOne', 'api::lead.lead'>;
-    lesson: Schema.Attribute.Relation<'oneToOne', 'api::lesson.lesson'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
