@@ -44,7 +44,12 @@ export default factories.createCoreService(
         notifications,
       };
     },
-    async startCourse({ templateCourseDocumentId, date: dateStart }) {
+    async startCourse({
+      templateCourseDocumentId,
+      dateStart,
+      teacherDocumentIds,
+      workshopDates,
+    }) {
       const templateCourse = await strapi
         .documents("api::template-course.template-course")
         .findOne({
@@ -59,6 +64,7 @@ export default factories.createCoreService(
             "workshopsPerWeek",
             "totalAmountOfWorkshops",
             "workshopDuration",
+            "discordLink",
           ],
           populate: [
             "templateLessons",
@@ -84,6 +90,7 @@ export default factories.createCoreService(
         stripeProductData,
         cover,
         workshopDuration,
+        discordLink,
       } = templateCourse;
 
       const subscriptionStripeData = await createMonthPriceStripe({
@@ -122,6 +129,7 @@ export default factories.createCoreService(
           },
           cover,
           workshopDuration,
+          discordLink,
         },
       });
 
@@ -136,12 +144,20 @@ export default factories.createCoreService(
         )
       );
 
+      const workshops = await strapi
+        .service("api::workshop.workshop")
+        .createWorkshops({
+          teacherDocumentIds,
+          dates: workshopDates,
+          courseDocumentId: newCourse.documentId,
+        });
+
       const updated = await strapi.documents("api::course.course").update({
         documentId: newCourse.documentId,
         data: {
           lessons,
+          workshops,
         },
-        populate: ["lessons"],
       });
 
       await strapi.documents("api::course.course").publish({

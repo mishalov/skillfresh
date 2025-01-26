@@ -3,18 +3,96 @@ import { stripeApi } from "../../../services/StripeApi";
 import { buildCancelUrl, buildSuccessUrl } from "../../../utils/buildRoutes";
 
 export default {
-  async start({ order }) {
-    const { email, paymentPlan } = order;
+  async start({ leadDocumentId, form, courseDocumentId }) {
+    const {
+      paymentPlan,
+      companyName,
+      email,
+      firstName,
+      lastName,
+      address,
+      city,
+      postalCode,
+      country,
+      paymentMethod,
+    } = form;
 
+    let lead;
+    if (leadDocumentId) {
+      lead = await strapi.service("api::lead.lead").findOne(leadDocumentId);
+
+      if (lead) {
+        strapi.documents("api::lead.lead").update({
+          documentId: leadDocumentId,
+          data: {
+            state: "in process",
+          },
+        });
+      } else {
+        lead = await strapi.documents("api::lead.lead").create({
+          data: {
+            source: "checkout",
+            name: `${firstName} ${lastName}`,
+            email,
+            state: "in process",
+          },
+        });
+      }
+    }
+
+    const course = await strapi
+      .service("api::course.course")
+      .findOne(courseDocumentId, {
+        populate: [
+          "templateCourse",
+          "stripePriceData",
+          "monthPrice",
+          "fullPrice",
+        ],
+      });
+
+    const order = await strapi.documents("api::order.order").create({
+      data: {
+        state: "Not Paid",
+        value: paymentPlan === "monthly" ? course.monthPrice : course.fullPrice,
+        companyName,
+        firstName,
+        lastName,
+        email,
+        paymentMethod,
+        paymentPlan,
+        course,
+        lead: lead?.documentId,
+        countOfPayments: course.templateCourse.durationMonths || 1,
+        address: {
+          address,
+          city,
+          postalCode,
+          country,
+        },
+      },
+      populate: {
+        course: {
+          populate: ["stripePriceData", "monthPrice", "fullPrice", "leads"],
+        },
+        value: {
+          populate: "*",
+        },
+      },
+    });
+
+    let result;
     if (paymentPlan === "monthly") {
-      return await this.startMonthlyPayment({
+      result = await this.startMonthlyPayment({
+        order,
+      });
+    } else {
+      result = await this.startFullPricePayment({
         order,
       });
     }
 
-    return await this.startFullPricePayment({
-      order,
-    });
+    return { ...result, leadDocumentId, orderDocumentId: order.documentId };
   },
 
   async startFullPricePayment({ order }): Promise<StartCheckoutResponse> {
@@ -31,7 +109,7 @@ export default {
         value,
         order: order.documentId,
         state: "New",
-        paymentDueDate: addDays(new Date(), 3),
+        dueDate: addDays(new Date(), 3),
       },
     });
 
@@ -82,7 +160,7 @@ export default {
         paymentMethod,
         order: order.documentId,
         state: "New",
-        paymentDueDate: addDays(new Date(), 3),
+        dueDate: addDays(new Date(), 3),
       },
     });
     const paymentDocumentId = firstPayment.documentId;
@@ -96,7 +174,7 @@ export default {
           paymentMethod,
           order: orderDocumentId,
           state: "Future",
-          paymentDueDate: addDays(new Date(), 3 + i * 30),
+          dueDate: addDays(new Date(), 3 + i * 30),
         },
       });
       payments.push(payment);
@@ -123,109 +201,7 @@ export default {
       redirectUrl: session.url,
       paymentDocumentId: paymentDocumentId,
       orderDocumentId: orderDocumentId,
-    };
-  },
-  async bankTransferPaymentInfo(paymentId) {
-    const payment = await strapi.documents("api::payment.payment").findOne({
-      documentId: paymentId,
-      fields: ["paymentDueDate", "state"],
-      populate: {
-        value: {
-          populate: "*",
-        },
-        order: {
-          fields: ["orderNumber", "paymentPlan", "email"],
-          populate: {
-            course: {
-              fields: ["name", "dateStart"],
-            },
-          },
-        },
-      },
-    });
-
-    if (!payment) {
-      return null;
-    }
-
-    const {
-      paymentDueDate,
-      value,
-      order: {
-        email,
-        orderNumber,
-        course: { name: courseName, dateStart },
-        paymentPlan,
-      },
-      state,
-    } = payment;
-
-    return {
-      orderNumber,
-      paymentDueDate,
-      value,
-      email,
-      state,
-      courseName,
-      dateStart,
-      paymentPlan,
-    };
-  },
-
-  async confirmPayment({ paymentDocumentId, sessionId }) {
-    const stripePayment = await stripeApi.checkout.sessions.retrieve(sessionId);
-
-    if (
-      !stripePayment ||
-      !(stripePayment.metadata.paymentId === paymentDocumentId)
-    ) {
-      return { success: false, message: "Payment not found or invalid" };
-    }
-
-    if (stripePayment.payment_status !== "paid") {
-      return { success: false, message: "Payment not paid" };
-    }
-
-    const payment = await strapi.documents("api::payment.payment").update({
-      documentId: paymentDocumentId,
-      data: {
-        state: "Completed",
-      },
-      populate: {
-        order: {
-          populate: {
-            course: {
-              fields: ["name", "dateStart", "durationMonths"],
-              populate: ["stripePriceData"],
-            },
-          },
-        },
-      },
-    });
-
-    if (stripePayment.mode === "subscription") {
-      await stripeApi.subscriptionSchedules.create({
-        customer: stripePayment.customer.toString(),
-        end_behavior: "cancel",
-        start_date: Math.trunc(addMonths(new Date(), 1).getTime() / 1000),
-        phases: [
-          {
-            items: [
-              {
-                price: payment.order.course.stripePriceData.monthPriceId,
-              },
-            ],
-            iterations: payment.order.course.durationMonths - 1,
-          },
-        ],
-      });
-    }
-
-    return {
-      email: payment.order.email,
-      courseName: payment.order.course.name,
-      startDate: payment.order.course.dateStart,
-      success: true,
+      orderNumber: orderNumber,
     };
   },
 };

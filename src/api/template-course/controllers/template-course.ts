@@ -18,11 +18,16 @@ export default factories.createCoreController(
     },
     async startCourse(ctx) {
       const { templateCourseDocumentId } = ctx.params;
-      const { date } = ctx.request.body;
+      const { dateStart, teacherDocumentIds, workshopDates } = ctx.request.body;
 
       return strapi
         .service("api::template-course.template-course")
-        .startCourse({ templateCourseDocumentId, date });
+        .startCourse({
+          templateCourseDocumentId,
+          dateStart,
+          workshopDates,
+          teacherDocumentIds,
+        });
     },
 
     async availableCourses(ctx) {

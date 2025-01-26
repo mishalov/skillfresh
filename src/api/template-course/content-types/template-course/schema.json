@@ -104,6 +104,9 @@
     "workshopDuration": {
       "type": "integer",
       "required": true
+    },
+    "discordLink": {
+      "type": "string"
     }
   }
 }

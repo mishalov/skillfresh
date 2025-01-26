@@ -447,6 +447,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     dateStart: Schema.Attribute.DateTime;
     description: Schema.Attribute.Text;
+    discordLink: Schema.Attribute.String;
     durationMonths: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -510,6 +511,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
         },
         number
       >;
+    workshops: Schema.Attribute.Relation<'oneToMany', 'api::workshop.workshop'>;
   };
 }
 
@@ -605,7 +607,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     referalId: Schema.Attribute.String;
     source: Schema.Attribute.String & Schema.Attribute.Required;
     state: Schema.Attribute.Enumeration<
-      ['new', 'in process', 'success', 'lost']
+      ['new', 'in process', 'contacted', 'success', 'lost']
     >;
     telegram: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -686,6 +688,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.Component<'shared.address', false>;
+    companyName: Schema.Attribute.String;
     countOfPayments: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
@@ -700,6 +703,8 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     email: Schema.Attribute.String & Schema.Attribute.Required;
+    firstName: Schema.Attribute.String;
+    lastName: Schema.Attribute.String;
     lead: Schema.Attribute.Relation<'manyToOne', 'api::lead.lead'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
@@ -712,14 +717,13 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
         },
         number
       >;
-    payerName: Schema.Attribute.String & Schema.Attribute.Required;
     paymentMethod: Schema.Attribute.String & Schema.Attribute.Required;
     paymentPlan: Schema.Attribute.Enumeration<['oneTimePayment', 'monthly']> &
       Schema.Attribute.Required;
     payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Enumeration<
-      ['Not Paid', 'Paid', 'Canceled', 'Partially paid']
+      ['Not Paid', 'Paid', 'Canceled', 'Partially paid', 'Payments created']
     > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Not Paid'>;
@@ -750,6 +754,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    dueDate: Schema.Attribute.Date & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -757,7 +762,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
-    paymentDueDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    paidAt: Schema.Attribute.DateTime;
     paymentMethod: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Enumeration<
@@ -829,6 +834,7 @@ export interface ApiTemplateCourseTemplateCourse
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
+    discordLink: Schema.Attribute.String;
     discount: Schema.Attribute.Integer &
       Schema.Attribute.SetMinMax<
         {
@@ -985,6 +991,45 @@ export interface ApiTemplateProjectTemplateProject
     name: Schema.Attribute.String & Schema.Attribute.Required;
     notionLink: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiWorkshopWorkshop extends Struct.CollectionTypeSchema {
+  collectionName: 'workshops';
+  info: {
+    description: '';
+    displayName: 'Workshop';
+    pluralName: 'workshops';
+    singularName: 'workshop';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    course: Schema.Attribute.Relation<'manyToOne', 'api::course.course'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.DateTime;
+    description: Schema.Attribute.Text & Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::workshop.workshop'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    students: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    teacher: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1468,7 +1513,9 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    firstName: Schema.Attribute.String;
     fromLead: Schema.Attribute.Relation<'oneToOne', 'api::lead.lead'>;
+    lastName: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -1489,6 +1536,7 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    tempPassword: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1498,6 +1546,14 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 3;
       }>;
+    workshopsAsStudent: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::workshop.workshop'
+    >;
+    workshopsAsTeacher: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::workshop.workshop'
+    >;
   };
 }
 
@@ -1524,6 +1580,7 @@ declare module '@strapi/strapi' {
       'api::template-course.template-course': ApiTemplateCourseTemplateCourse;
       'api::template-lesson.template-lesson': ApiTemplateLessonTemplateLesson;
       'api::template-project.template-project': ApiTemplateProjectTemplateProject;
+      'api::workshop.workshop': ApiWorkshopWorkshop;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

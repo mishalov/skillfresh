@@ -34,8 +34,8 @@
     "additionalInfo": {
       "type": "text"
     },
-    "paymentDueDate": {
-      "type": "datetime",
+    "dueDate": {
+      "type": "date",
       "required": true
     },
     "transactionId": {
@@ -47,6 +47,9 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.price"
+    },
+    "paidAt": {
+      "type": "datetime"
     }
   }
 }

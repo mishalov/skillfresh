@@ -1,19 +1,37 @@
 export default ({ strapi }) => ({
-  async getTeachers() {
-    const teacherRole = await strapi("api::role.role").findOne({
-      filters: {
-        name: {
-          $eq: "teacher",
+  async getTeachers({ teacherDocumentIds }: { teacherDocumentIds?: string[] }) {
+    const [teacherRole] = await strapi
+      .documents("plugin::users-permissions.role")
+      .findMany({
+        filters: {
+          name: {
+            $eq: "Teacher",
+          },
         },
-      },
-    });
+        limit: 1,
+      });
 
-    console.log("teacherRole: ", teacherRole);
+    if (teacherDocumentIds) {
+      return strapi.documents("plugin::users-permissions.user").findMany({
+        filters: {
+          role: {
+            documentId: {
+              $eq: teacherRole.documentId,
+            },
+          },
+          documentId: {
+            $in: teacherDocumentIds,
+          },
+        },
+      });
+    }
 
-    return strapi.documents("api::user.user").find({
+    return strapi.documents("plugin::users-permissions.user").findMany({
       filters: {
         role: {
-          $eq: teacherRole.documentId,
+          documentId: {
+            $eq: teacherRole.documentId,
+          },
         },
       },
     });

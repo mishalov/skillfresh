@@ -99,6 +99,27 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::course.course"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "workshopsAsTeacher": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::workshop.workshop",
+      "mappedBy": "teacher"
+    },
+    "workshopsAsStudent": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::workshop.workshop",
+      "mappedBy": "students"
+    },
+    "tempPassword": {
+      "type": "string"
     }
   }
 }

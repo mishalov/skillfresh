@@ -18,5 +18,27 @@ export default factories.createCoreService("api::lead.lead", ({ strapi }) => {
       }
       return result;
     },
+    async checkLeadStatus(leadDocumentId) {
+      if (!leadDocumentId) {
+        return null;
+      }
+
+      const { state, orders } = await strapi
+        .documents("api::lead.lead")
+        .findOne({
+          documentId: leadDocumentId,
+          fields: ["state"],
+          populate: "orders",
+        });
+
+      const orderDocumentId = orders?.find(
+        (order) => order.state === "Partially paid" || order.state === "Paid"
+      )?.documentId;
+
+      return {
+        state,
+        orderDocumentId,
+      };
+    },
   };
 });

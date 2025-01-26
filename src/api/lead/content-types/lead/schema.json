@@ -17,6 +17,7 @@
       "enum": [
         "new",
         "in process",
+        "contacted",
         "success",
         "lost"
       ]

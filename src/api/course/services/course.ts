@@ -26,7 +26,6 @@ export default factories.createCoreService(
       const course = await strapi
         .service("api::course.course")
         .getPublicCourse(courseDocumentId);
-      console.log("course: ", course);
 
       const availableCourses = await strapi
         .service("api::template-course.template-course")
@@ -54,7 +53,13 @@ export default factories.createCoreService(
           fields: [],
           populate: {
             coursesAsStudent: {
-              fields: ["name", "dateStart", "durationMonths", "description"],
+              fields: [
+                "name",
+                "dateStart",
+                "durationMonths",
+                "description",
+                "discordLink",
+              ],
               populate: [
                 "templateCourse",
                 "monthPrice",
@@ -64,7 +69,13 @@ export default factories.createCoreService(
               ],
             },
             defaultCourse: {
-              fields: ["name", "dateStart", "durationMonths", "description"],
+              fields: [
+                "name",
+                "dateStart",
+                "durationMonths",
+                "description",
+                "discordLink",
+              ],
               populate: [
                 "templateCourse",
                 "monthPrice",

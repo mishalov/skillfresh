@@ -124,6 +124,15 @@
     "workshopDuration": {
       "type": "integer",
       "min": 0
+    },
+    "workshops": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::workshop.workshop",
+      "mappedBy": "course"
+    },
+    "discordLink": {
+      "type": "string"
     }
   }
 }

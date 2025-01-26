@@ -32,7 +32,6 @@ export default factories.createCoreService(
           },
         },
       });
-      console.log("state: ", state);
 
       // Check if all payments are completed
       if (
