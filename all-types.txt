@@ -1,0 +1,703 @@
+
+{
+  "kind": "singleType",
+  "collectionName": "abouts",
+  "info": {
+    "singularName": "about",
+    "pluralName": "abouts",
+    "displayName": "About",
+    "description": "Write about yourself and the content you create"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "blocks": {
+      "type": "dynamiczone",
+      "components": ["shared.media", "shared.quote", "shared.rich-text", "shared.slider"]
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "courses",
+  "info": {
+    "singularName": "course",
+    "pluralName": "courses",
+    "displayName": "Course",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "dateStart": {
+      "type": "datetime"
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "Future",
+        "In progress",
+        "Completed"
+      ],
+      "default": "Future"
+    },
+    "teachers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "courses"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "richtext"
+    },
+    "discount": {
+      "type": "integer",
+      "min": 0,
+      "max": 100
+    },
+    "lessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lesson.lesson",
+      "mappedBy": "course"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "course"
+    },
+    "leads": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::lead.lead",
+      "mappedBy": "courses"
+    },
+    "feedbacks": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::feedback.feedback",
+      "mappedBy": "courses"
+    },
+    "students": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::student.student",
+      "mappedBy": "courses"
+    },
+    "templateCourse": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::template-course.template-course",
+      "inversedBy": "courses"
+    },
+    "durationMonths": {
+      "type": "integer",
+      "min": 0
+    },
+    "fullPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "monthPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "template_projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::template-project.template-project",
+      "mappedBy": "courses"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "feedbacks",
+  "info": {
+    "singularName": "feedback",
+    "pluralName": "feedbacks",
+    "displayName": "Feedback"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "text": {
+      "type": "text"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "Feedback",
+        "Complain"
+      ]
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::course.course",
+      "inversedBy": "feedbacks"
+    },
+    "lessons": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::lesson.lesson",
+      "inversedBy": "feedbacks"
+    },
+    "user": {
+      "type": "string"
+    }
+  }
+}
+
+{
+  "kind": "singleType",
+  "collectionName": "globals",
+  "info": {
+    "singularName": "global",
+    "pluralName": "globals",
+    "displayName": "Global",
+    "description": "Define global settings"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "siteName": {
+      "type": "string",
+      "required": true
+    },
+    "favicon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "files", "videos"]
+    },
+    "siteDescription": {
+      "type": "text",
+      "required": true
+    },
+    "defaultSeo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "leads",
+  "info": {
+    "singularName": "lead",
+    "pluralName": "leads",
+    "displayName": "Lead",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "New",
+        "In Process",
+        "Success",
+        "Lost"
+      ]
+    },
+    "source": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string"
+    },
+    "telegram": {
+      "type": "string"
+    },
+    "whatsapp": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::course.course",
+      "inversedBy": "leads"
+    },
+    "additionalInfo": {
+      "type": "text"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::student.student",
+      "mappedBy": "lead"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "lessons",
+  "info": {
+    "singularName": "lesson",
+    "pluralName": "lessons",
+    "displayName": "Lesson",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "duration": {
+      "type": "integer",
+      "min": 15,
+      "default": 60
+    },
+    "description": {
+      "type": "text"
+    },
+    "additionalInfo": {
+      "type": "richtext"
+    },
+    "course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course.course",
+      "inversedBy": "lessons"
+    },
+    "scheduled": {
+      "type": "datetime"
+    },
+    "feedbacks": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::feedback.feedback",
+      "mappedBy": "lessons"
+    },
+    "students": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::student.student",
+      "mappedBy": "lessons"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "revealed": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "teacher": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "lesson"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "amount": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "Not Paid",
+        "Paid",
+        "Canceled"
+      ],
+      "default": "Not Paid",
+      "required": true
+    },
+    "paymentMethod": {
+      "type": "string",
+      "required": true
+    },
+    "course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course.course",
+      "inversedBy": "orders"
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "order"
+    },
+    "payer_name": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "payments",
+  "info": {
+    "singularName": "payment",
+    "pluralName": "payments",
+    "displayName": "Payment",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "amount": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "paymentType": {
+      "type": "string",
+      "required": true
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "Completed",
+        "Error"
+      ]
+    },
+    "order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order.order",
+      "inversedBy": "payments"
+    },
+    "additionalInfo": {
+      "type": "text"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::student.student",
+      "inversedBy": "payments"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "projects",
+  "info": {
+    "singularName": "project",
+    "pluralName": "projects",
+    "displayName": "project"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "deadline": {
+      "type": "date",
+      "required": true
+    },
+    "notionLink": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "complete": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "reviewResult": {
+      "type": "blocks"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::student.student",
+      "inversedBy": "projects"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "students",
+  "info": {
+    "singularName": "student",
+    "pluralName": "students",
+    "displayName": "Student",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "uuid": {
+      "type": "uid",
+      "required": true
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::course.course",
+      "inversedBy": "students"
+    },
+    "lessons": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::lesson.lesson",
+      "inversedBy": "students"
+    },
+    "lead": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lead.lead",
+      "inversedBy": "student"
+    },
+    "password": {
+      "type": "password",
+      "required": true
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "regex": "^(([^<>()[\\]\\\\.,;:\\s@\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\"]+)*)|.(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$",
+      "unique": true
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "student"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::project.project",
+      "mappedBy": "student"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "template_courses",
+  "info": {
+    "singularName": "template-course",
+    "pluralName": "template-courses",
+    "displayName": "TemplateCourse",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "notes": {
+      "type": "richtext"
+    },
+    "templateLessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::template-lesson.template-lesson",
+      "mappedBy": "templateCourse"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "durationMonths": {
+      "type": "integer",
+      "min": 0
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::course.course",
+      "mappedBy": "templateCourse"
+    },
+    "monthPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "fullPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "workshopsPerWeek": {
+      "type": "integer",
+      "min": 0,
+      "required": true,
+      "max": 5,
+      "default": 1
+    },
+    "totalAmountOfLessons": {
+      "type": "integer",
+      "min": 1,
+      "required": true,
+      "default": 1
+    },
+    "totalAmountOfWorkshops": {
+      "type": "integer",
+      "min": 1,
+      "required": true,
+      "default": 1
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "template_lessons",
+  "info": {
+    "singularName": "template-lesson",
+    "pluralName": "template-lessons",
+    "displayName": "TemplateLesson",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "duration": {
+      "min": 5,
+      "type": "integer",
+      "max": 240,
+      "default": 60
+    },
+    "description": {
+      "type": "text"
+    },
+    "additionalInfo": {
+      "type": "richtext"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "templateCourse": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::template-course.template-course",
+      "inversedBy": "templateLessons"
+    }
+  }
+}
+
+{
+  "kind": "collectionType",
+  "collectionName": "template_projects",
+  "info": {
+    "singularName": "template-project",
+    "pluralName": "template-projects",
+    "displayName": "TemplateProject"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "notionLink": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::course.course",
+      "inversedBy": "template_projects"
+    },
+    "durationDays": {
+      "type": "integer",
+      "required": true
+    },
+    "additionalInfo": {
+      "type": "richtext"
+    }
+  }
+}

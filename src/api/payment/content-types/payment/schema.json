@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "payments",
+  "info": {
+    "singularName": "payment",
+    "pluralName": "payments",
+    "displayName": "Payment",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "paymentMethod": {
+      "type": "string",
+      "required": true
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "New",
+        "Completed",
+        "Error",
+        "Future"
+      ]
+    },
+    "order": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order.order",
+      "inversedBy": "payments"
+    },
+    "additionalInfo": {
+      "type": "text"
+    },
+    "dueDate": {
+      "type": "date",
+      "required": true
+    },
+    "transactionId": {
+      "type": "string",
+      "required": false,
+      "unique": true
+    },
+    "value": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "paidAt": {
+      "type": "datetime"
+    }
+  }
+}

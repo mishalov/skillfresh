@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "template_projects",
+  "info": {
+    "singularName": "template-project",
+    "pluralName": "template-projects",
+    "displayName": "TemplateProject"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "notionLink": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "durationDays": {
+      "type": "integer",
+      "required": true
+    },
+    "additionalInfo": {
+      "type": "richtext"
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::course.course",
+      "mappedBy": "templateProjects"
+    }
+  }
+}

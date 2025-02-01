@@ -1,0 +1,17 @@
+<h1>Hello and welcome, <%= firstName %>
+</h1>
+
+<p>Your course <%= courseName %> has been successfully purchased, but there is one last thing:</p>
+
+<p>We've created a user for you, but first please reset the
+    password using this link: <a href="<%= passwordCreationLink %>">Create password</a>
+</p>
+
+<p>After you've created the password, you can log in to the platform and start learning.</p>
+
+<p>Thank you for choosing us! Here you can find status of your order: <a href="<%= orderStatusUrl %>">
+        <%= orderStatusUrl %>
+    </a> Have questions?
+    Contact us by email: <a href="mailto:support@werockstars.com">support@werockstars.com</a>, Your order number is:
+    <%= orderNumber %>
+</p>

@@ -1,0 +1,112 @@
+{
+  "kind": "collectionType",
+  "collectionName": "template_courses",
+  "info": {
+    "singularName": "template-course",
+    "pluralName": "template-courses",
+    "displayName": "TemplateCourse",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "notes": {
+      "type": "richtext"
+    },
+    "templateLessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::template-lesson.template-lesson",
+      "mappedBy": "templateCourse"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "durationMonths": {
+      "type": "integer",
+      "min": 0
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::course.course",
+      "mappedBy": "templateCourse"
+    },
+    "monthPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price",
+      "required": false
+    },
+    "fullPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price",
+      "required": true
+    },
+    "workshopsPerWeek": {
+      "type": "integer",
+      "min": 0,
+      "required": true,
+      "max": 5,
+      "default": 1
+    },
+    "totalAmountOfLessons": {
+      "type": "integer",
+      "min": 1,
+      "required": true,
+      "default": 1
+    },
+    "totalAmountOfWorkshops": {
+      "type": "integer",
+      "min": 1,
+      "required": true,
+      "default": 1
+    },
+    "discount": {
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 0
+    },
+    "participantsLimit": {
+      "type": "integer",
+      "min": 0
+    },
+    "isMonthlyPaymentAvailable": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "stripeProductData": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.stripe-data"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files",
+        "images"
+      ]
+    },
+    "workshopDuration": {
+      "type": "integer",
+      "required": true
+    },
+    "discordLink": {
+      "type": "string"
+    }
+  }
+}

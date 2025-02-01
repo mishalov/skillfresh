@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "template_lessons",
+  "info": {
+    "singularName": "template-lesson",
+    "pluralName": "template-lessons",
+    "displayName": "TemplateLesson",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "duration": {
+      "min": 5,
+      "type": "integer",
+      "max": 240,
+      "default": 60
+    },
+    "description": {
+      "type": "text"
+    },
+    "innerInfo": {
+      "type": "richtext"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "templateCourse": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::template-course.template-course",
+      "inversedBy": "templateLessons"
+    },
+    "lessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lesson.lesson",
+      "mappedBy": "templateLesson"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "chapter": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::chapter.chapter"
+    }
+  }
+}

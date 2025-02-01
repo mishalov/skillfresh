@@ -1,0 +1,138 @@
+{
+  "kind": "collectionType",
+  "collectionName": "courses",
+  "info": {
+    "singularName": "course",
+    "pluralName": "courses",
+    "displayName": "Course",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "dateStart": {
+      "type": "datetime"
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "Future",
+        "In progress",
+        "Completed"
+      ],
+      "default": "Future"
+    },
+    "notionLink": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "richtext"
+    },
+    "lessons": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lesson.lesson",
+      "mappedBy": "course"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "course"
+    },
+    "leads": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::lead.lead",
+      "mappedBy": "courses"
+    },
+    "feedbacks": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::feedback.feedback",
+      "mappedBy": "courses"
+    },
+    "templateCourse": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::template-course.template-course",
+      "inversedBy": "courses"
+    },
+    "durationMonths": {
+      "type": "integer",
+      "min": 0
+    },
+    "templateProjects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::template-project.template-project",
+      "inversedBy": "courses"
+    },
+    "fullPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price",
+      "required": true
+    },
+    "monthPrice": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.price"
+    },
+    "stripePriceData": {
+      "displayName": "StripePriceData",
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.stripe-price-data",
+      "required": true
+    },
+    "students": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "coursesAsStudent"
+    },
+    "teachers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "coursesAsTeacher"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": false
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "workshopDuration": {
+      "type": "integer",
+      "min": 0
+    },
+    "workshops": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::workshop.workshop",
+      "mappedBy": "course"
+    },
+    "discordLink": {
+      "type": "string"
+    }
+  }
+}
