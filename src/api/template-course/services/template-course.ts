@@ -114,10 +114,12 @@ export default factories.createCoreService(
           durationMonths,
           workshopsPerWeek,
           totalAmountOfWorkshops,
-          monthPrice: {
-            amount: monthPrice.amount,
-            currency: monthPrice.currency,
-          },
+          monthPrice: monthPrice
+            ? {
+                amount: monthPrice.amount,
+                currency: monthPrice.currency,
+              }
+            : null,
           fullPrice: {
             amount: fullPrice.amount,
             currency: fullPrice.currency,
@@ -158,10 +160,6 @@ export default factories.createCoreService(
           lessons,
           workshops,
         },
-      });
-
-      await strapi.documents("api::course.course").publish({
-        documentId: updated.documentId,
       });
 
       return strapi.documents("api::course.course").findOne({

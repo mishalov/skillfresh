@@ -45,46 +45,42 @@ export default factories.createCoreService(
       });
     },
 
-    async getUserDefaultCourse(userDocumentId) {
+    async getDefaultCourse(userDocumentId) {
+      const courseFields = {
+        fields: [
+          "name",
+          "dateStart",
+          "durationMonths",
+          "description",
+          "discordLink",
+        ],
+        populate: {
+          lessons: {
+            fields: ["name", "duration", "description", "notionLink"],
+            populate: {
+              chapter: {
+                fields: ["name", "description"],
+                populate: ["cover"],
+              },
+            },
+          },
+          workshops: {
+            fields: ["date", "description"],
+          },
+          cover: {
+            fields: "*",
+          },
+        },
+      } as any;
+
       const user = await strapi
         .documents("plugin::users-permissions.user")
         .findOne({
           documentId: userDocumentId,
           fields: [],
           populate: {
-            coursesAsStudent: {
-              fields: [
-                "name",
-                "dateStart",
-                "durationMonths",
-                "description",
-                "discordLink",
-              ],
-              populate: [
-                "templateCourse",
-                "monthPrice",
-                "fullPrice",
-                "lessons",
-                "cover",
-              ],
-            },
-            defaultCourse: {
-              fields: [
-                "name",
-                "dateStart",
-                "durationMonths",
-                "description",
-                "discordLink",
-              ],
-              populate: [
-                // "templateCourse",
-                "lessons",
-                "monthPrice",
-                "fullPrice",
-                "lessons",
-                "cover",
-              ],
-            },
+            coursesAsStudent: courseFields,
+            defaultCourse: courseFields,
           },
         });
 

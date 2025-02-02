@@ -29,8 +29,7 @@
       "inversedBy": "workshops"
     },
     "description": {
-      "type": "text",
-      "private": true
+      "type": "string"
     },
     "students": {
       "type": "relation",

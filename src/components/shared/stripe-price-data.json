@@ -8,7 +8,7 @@
   "attributes": {
     "monthPriceId": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "fullPriceId": {
       "type": "string",

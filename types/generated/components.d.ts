@@ -118,7 +118,7 @@ export interface SharedStripePriceData extends Struct.ComponentSchema {
   };
   attributes: {
     fullPriceId: Schema.Attribute.String & Schema.Attribute.Required;
-    monthPriceId: Schema.Attribute.String & Schema.Attribute.Required;
+    monthPriceId: Schema.Attribute.String;
   };
 }
 

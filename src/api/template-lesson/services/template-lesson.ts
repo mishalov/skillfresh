@@ -37,10 +37,6 @@ export default factories.createCoreService(
         populate: ["course", "templateLesson"],
       });
 
-      await strapi.documents("api::lesson.lesson").publish({
-        documentId: lesson.documentId,
-      });
-
       return lesson;
     },
   })

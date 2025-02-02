@@ -1,3 +1,4 @@
+import { Core } from "@strapi/strapi";
 import {
   createStripeFullPriceProduct,
   createStripeSubscriptionProduct,
@@ -10,6 +11,7 @@ export default {
     const { name, monthPrice, fullPrice } = result;
 
     const fullPriceStripeData = await createStripeFullPriceProduct(name);
+    console.log("fullPriceStripeData: ", fullPriceStripeData);
 
     let monthlyStripeData;
 
@@ -22,7 +24,7 @@ export default {
       data: {
         stripeProductData: {
           stripeProductIdFull: fullPriceStripeData.id,
-          stripeProductIdMonthly: monthlyStripeData.id,
+          stripeProductIdMonthly: monthlyStripeData?.id,
         },
       },
     });

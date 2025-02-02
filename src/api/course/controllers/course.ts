@@ -40,7 +40,7 @@ export default factories.createCoreController(
 
       const course = await strapi
         .service("api::course.course")
-        .getUserDefaultCourse(user.documentId);
+        .getDefaultCourse(user.documentId);
 
       return course;
     },

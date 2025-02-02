@@ -414,7 +414,7 @@ export interface ApiChapterChapter extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.Blocks;
+    description: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -438,7 +438,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     singularName: 'course';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     cover: Schema.Attribute.Media<'images' | 'files'>;
@@ -630,7 +630,7 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
     singularName: 'lesson';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     chapter: Schema.Attribute.Relation<'oneToOne', 'api::chapter.chapter'>;
@@ -924,7 +924,7 @@ export interface ApiTemplateLessonTemplateLesson
     singularName: 'template-lesson';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     chapter: Schema.Attribute.Relation<'oneToOne', 'api::chapter.chapter'>;
@@ -1014,7 +1014,7 @@ export interface ApiWorkshopWorkshop extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     date: Schema.Attribute.DateTime;
-    description: Schema.Attribute.Text & Schema.Attribute.Private;
+    description: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

@@ -27,11 +27,7 @@ export const createStripeSubscriptionProduct = async (
 };
 
 export const createMonthPriceStripe = async ({ monthPrice, productId }) => {
-  if (!productId) {
-    throw new Error(
-      "createMonthPriceStripe: Product id is required to create a price"
-    );
-  }
+  if (!productId) return null;
 
   const price = await stripeApi.prices.create({
     active: true,
