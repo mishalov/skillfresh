@@ -25,7 +25,7 @@ export default {
         strapi.documents("api::lead.lead").update({
           documentId: leadDocumentId,
           data: {
-            state: "in process",
+            state: "In Progress",
           },
         });
       } else {
@@ -34,7 +34,7 @@ export default {
             source: "checkout",
             name: `${firstName} ${lastName}`,
             email,
-            state: "in process",
+            state: "In Progress",
           },
         });
       }

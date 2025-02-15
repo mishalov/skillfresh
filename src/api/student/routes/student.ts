@@ -5,5 +5,10 @@ export default {
       path: "/student/dashboard",
       handler: "student.getDashboard",
     },
+    {
+      method: "POST",
+      path: "/student/:documentId/assign-project",
+      handler: "student.assignProject",
+    },
   ],
 };

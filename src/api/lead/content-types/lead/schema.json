@@ -15,11 +15,11 @@
     "state": {
       "type": "enumeration",
       "enum": [
-        "new",
-        "in process",
-        "contacted",
-        "success",
-        "lost"
+        "New",
+        "In Progress",
+        "Contacted",
+        "Success",
+        "Lost"
       ]
     },
     "source": {

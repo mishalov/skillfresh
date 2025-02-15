@@ -478,7 +478,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'>;
     state: Schema.Attribute.Enumeration<
-      ['Future', 'In progress', 'Completed']
+      ['Future', 'In Progress', 'Completed']
     > &
       Schema.Attribute.DefaultTo<'Future'>;
     stripePriceData: Schema.Attribute.Component<
@@ -604,7 +604,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     referalId: Schema.Attribute.String;
     source: Schema.Attribute.String & Schema.Attribute.Required;
     state: Schema.Attribute.Enumeration<
-      ['new', 'in process', 'contacted', 'success', 'lost']
+      ['New', 'In Progress', 'Contacted', 'Success', 'Lost']
     >;
     telegram: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -788,9 +788,6 @@ export interface ApiProjectResultProjectResult
     draftAndPublish: false;
   };
   attributes: {
-    complete: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -807,6 +804,11 @@ export interface ApiProjectResultProjectResult
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
     reviewResult: Schema.Attribute.Blocks;
+    state: Schema.Attribute.Enumeration<
+      ['In Progress', 'In Review', 'Completed']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'In Progress'>;
     student: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.user'

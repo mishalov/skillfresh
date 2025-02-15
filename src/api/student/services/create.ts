@@ -73,7 +73,7 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
     await strapi.documents("api::lead.lead").update({
       documentId: leadDocumentId,
       data: {
-        state: "success",
+        state: "Success",
       },
     });
 

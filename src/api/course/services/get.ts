@@ -94,4 +94,39 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
 
     return user.defaultCourse || user.coursesAsStudent[0];
   },
+
+  async course(documentId) {
+    const course = await strapi.documents("api::course.course").findOne({
+      documentId,
+      populate: {
+        lessons: {
+          populate: "*",
+        },
+        students: {
+          populate: {
+            projectResults: {
+              populate: "*",
+            },
+          },
+        },
+        workshops: {
+          populate: "*",
+        },
+        projects: {
+          populate: "*",
+        },
+      },
+    });
+
+    course.students = course.students.map((student) => ({
+      ...student,
+      projectResults: student.projectResults.filter((result) =>
+        course.projects.some(
+          (project) => project.documentId === result.project.documentId
+        )
+      ),
+    }));
+
+    return course;
+  },
 });

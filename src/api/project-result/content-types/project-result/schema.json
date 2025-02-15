@@ -16,11 +16,6 @@
       "type": "date",
       "required": false
     },
-    "complete": {
-      "type": "boolean",
-      "default": false,
-      "required": true
-    },
     "reviewResult": {
       "type": "blocks"
     },
@@ -40,6 +35,16 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "projectResults"
+    },
+    "state": {
+      "type": "enumeration",
+      "enum": [
+        "In Progress",
+        "In Review",
+        "Completed"
+      ],
+      "required": true,
+      "default": "In Progress"
     }
   }
 }

@@ -38,26 +38,6 @@ export default {
   async getCourse(ctx) {
     const { documentId } = ctx.params;
 
-    const course = strapi.documents("api::course.course").findOne({
-      documentId,
-      populate: {
-        lessons: {
-          populate: "*",
-        },
-        students: {
-          populate: {
-            projectResults: {
-              populate: "*",
-            },
-          },
-        },
-        workshops: {
-          populate: "*",
-        },
-        projects: {
-          populate: "*",
-        },
-      },
-    });
+    return strapi.service("api::course.get").course(documentId);
   },
 };
