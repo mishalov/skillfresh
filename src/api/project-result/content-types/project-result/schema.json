@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "project_results",
+  "info": {
+    "singularName": "project-result",
+    "pluralName": "project-results",
+    "displayName": "ProjectResult",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "deadline": {
+      "type": "date",
+      "required": false
+    },
+    "complete": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "reviewResult": {
+      "type": "blocks"
+    },
+    "revealed": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "project": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::project.project",
+      "inversedBy": "project_results"
+    },
+    "student": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "projectResults"
+    }
+  }
+}

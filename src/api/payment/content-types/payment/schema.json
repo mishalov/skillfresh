@@ -46,7 +46,8 @@
     "value": {
       "type": "component",
       "repeatable": false,
-      "component": "shared.price"
+      "component": "shared.price",
+      "required": true
     },
     "paidAt": {
       "type": "datetime"

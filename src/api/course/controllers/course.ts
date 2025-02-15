@@ -1,48 +1,63 @@
-/**
- * course controller
- */
+export default {
+  async publicCourse(ctx) {
+    const { documentId } = ctx.params;
 
-import { factories } from "@strapi/strapi";
+    const course = await strapi
+      .service("api::course.get")
+      .publicCourse(documentId);
 
-export default factories.createCoreController(
-  "api::course.course",
-  ({ strapi }) => ({
-    async publicCourse(ctx) {
-      const { documentId } = ctx.params;
+    return course;
+  },
 
-      const course = await strapi
-        .service("api::course.course")
-        .getPublicCourse(documentId);
+  async paymentPageData(ctx) {
+    const { courseDocumentId } = ctx.params;
 
-      return course;
-    },
+    return strapi.service("api::course.get").withTemplate(courseDocumentId);
+  },
 
-    async paymentPageData(ctx) {
-      const { courseDocumentId } = ctx.params;
+  async getCourses(ctx) {
+    const user = ctx.state.user;
 
-      return strapi
-        .service("api::course.course")
-        .getCoursePaymentPageData(courseDocumentId);
-    },
+    const courses = await strapi
+      .service("api::course.get")
+      .courses(user.documentId, user.role.type.toLowerCase());
 
-    async myCourses(ctx) {
-      const user = ctx.state.user;
+    return courses;
+  },
 
-      const courses = await strapi
-        .service("api::course.course")
-        .getUserCourses(user.documentId);
+  async defaultCourse(ctx) {
+    const user = ctx.state.user;
 
-      return courses.coursesAsStudent;
-    },
+    const course = await strapi
+      .service("api::course.course")
+      .getDefaultCourse(user.documentId);
 
-    async myCourse(ctx) {
-      const user = ctx.state.user;
+    return course;
+  },
 
-      const course = await strapi
-        .service("api::course.course")
-        .getDefaultCourse(user.documentId);
+  async getCourse(ctx) {
+    const { documentId } = ctx.params;
 
-      return course;
-    },
-  })
-);
+    const course = strapi.documents("api::course.course").findOne({
+      documentId,
+      populate: {
+        lessons: {
+          populate: "*",
+        },
+        students: {
+          populate: {
+            projectResults: {
+              populate: "*",
+            },
+          },
+        },
+        workshops: {
+          populate: "*",
+        },
+        projects: {
+          populate: "*",
+        },
+      },
+    });
+  },
+};

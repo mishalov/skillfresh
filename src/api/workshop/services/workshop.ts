@@ -38,7 +38,7 @@ export default factories.createCoreService(
         })
       );
     },
-    async getStudentsNextWorkshop(user) {
+    async getStudentsNextWorkshop(userDocumentId: string) {
       const workshop = (
         await strapi.documents("api::workshop.workshop").findMany({
           fields: ["date"],
@@ -48,7 +48,7 @@ export default factories.createCoreService(
             },
             students: {
               documentId: {
-                $eq: user.documentId,
+                $eq: userDocumentId,
               },
             },
           },

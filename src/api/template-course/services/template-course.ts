@@ -72,6 +72,7 @@ export default factories.createCoreService(
             "fullPrice",
             "stripeProductData",
             "cover",
+            "projects",
           ],
         });
 
@@ -114,6 +115,7 @@ export default factories.createCoreService(
           durationMonths,
           workshopsPerWeek,
           totalAmountOfWorkshops,
+          teachers: teacherDocumentIds,
           monthPrice: monthPrice
             ? {
                 amount: monthPrice.amount,
@@ -132,6 +134,7 @@ export default factories.createCoreService(
           cover,
           workshopDuration,
           discordLink,
+          projects: templateCourse.projects,
         },
       });
 
@@ -185,9 +188,7 @@ export default factories.createCoreService(
 
       return Promise.all(
         courses.map((course) =>
-          strapi
-            .service("api::course.course")
-            .getPublicCourse(course.documentId)
+          strapi.service("api::course.get").publicCourse(course.documentId)
         )
       );
     },

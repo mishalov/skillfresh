@@ -61,6 +61,10 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::chapter.chapter"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
     }
   }
 }

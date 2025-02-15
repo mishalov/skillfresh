@@ -11,7 +11,7 @@ export default factories.createCoreController(
       const user = ctx.state.user;
       const workshop = await strapi
         .service("api::workshop.workshop")
-        .getStudentsNextWorkshop(user);
+        .getStudentsNextWorkshop(user.documentId);
 
       return workshop;
     },

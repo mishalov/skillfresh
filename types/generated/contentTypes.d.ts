@@ -474,6 +474,7 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     notes: Schema.Attribute.RichText;
     notionLink: Schema.Attribute.String;
     orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
+    projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'>;
     state: Schema.Attribute.Enumeration<
@@ -496,10 +497,6 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
     templateCourse: Schema.Attribute.Relation<
       'manyToOne',
       'api::template-course.template-course'
-    >;
-    templateProjects: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::template-project.template-project'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -665,6 +662,7 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
     scheduled: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'>;
     templateLesson: Schema.Attribute.Relation<
       'manyToOne',
       'api::template-lesson.template-lesson'
@@ -772,16 +770,19 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    value: Schema.Attribute.Component<'shared.price', false>;
+    value: Schema.Attribute.Component<'shared.price', false> &
+      Schema.Attribute.Required;
   };
 }
 
-export interface ApiProjectProject extends Struct.CollectionTypeSchema {
-  collectionName: 'projects';
+export interface ApiProjectResultProjectResult
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'project_results';
   info: {
-    displayName: 'project';
-    pluralName: 'projects';
-    singularName: 'project';
+    description: '';
+    displayName: 'ProjectResult';
+    pluralName: 'project-results';
+    singularName: 'project-result';
   };
   options: {
     draftAndPublish: false;
@@ -793,8 +794,47 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    deadline: Schema.Attribute.Date & Schema.Attribute.Required;
+    deadline: Schema.Attribute.Date;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::project-result.project-result'
+    > &
+      Schema.Attribute.Private;
+    project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
+    publishedAt: Schema.Attribute.DateTime;
+    revealed: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    reviewResult: Schema.Attribute.Blocks;
+    student: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiProjectProject extends Struct.CollectionTypeSchema {
+  collectionName: 'projects';
+  info: {
+    displayName: 'Project';
+    pluralName: 'projects';
+    singularName: 'project';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    course: Schema.Attribute.Relation<'manyToOne', 'api::course.course'>;
+    cover: Schema.Attribute.Media<'images' | 'files'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
     description: Schema.Attribute.Text;
+    innerDescription: Schema.Attribute.Text & Schema.Attribute.Private;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -803,15 +843,18 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     notionLink: Schema.Attribute.String & Schema.Attribute.Required;
+    project_results: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::project-result.project-result'
+    >;
     publishedAt: Schema.Attribute.DateTime;
-    reviewResult: Schema.Attribute.Blocks;
+    templateCourse: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::template-course.template-course'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users: Schema.Attribute.Relation<
-      'manyToMany',
-      'plugin::users-permissions.user'
-    >;
   };
 }
 
@@ -873,6 +916,7 @@ export interface ApiTemplateCourseTemplateCourse
         },
         number
       >;
+    projects: Schema.Attribute.Relation<'oneToMany', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     stripeProductData: Schema.Attribute.Component<'shared.stripe-data', false>;
     templateLessons: Schema.Attribute.Relation<
@@ -957,40 +1001,6 @@ export interface ApiTemplateLessonTemplateLesson
       'api::template-course.template-course'
     >;
     topic: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiTemplateProjectTemplateProject
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'template_projects';
-  info: {
-    displayName: 'TemplateProject';
-    pluralName: 'template-projects';
-    singularName: 'template-project';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    additionalInfo: Schema.Attribute.RichText;
-    courses: Schema.Attribute.Relation<'manyToMany', 'api::course.course'>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    description: Schema.Attribute.Text;
-    durationDays: Schema.Attribute.Integer & Schema.Attribute.Required;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::template-project.template-project'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    notionLink: Schema.Attribute.String & Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1528,7 +1538,10 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    projects: Schema.Attribute.Relation<'manyToMany', 'api::project.project'>;
+    projectResults: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::project-result.project-result'
+    >;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1576,10 +1589,10 @@ declare module '@strapi/strapi' {
       'api::lesson.lesson': ApiLessonLesson;
       'api::order.order': ApiOrderOrder;
       'api::payment.payment': ApiPaymentPayment;
+      'api::project-result.project-result': ApiProjectResultProjectResult;
       'api::project.project': ApiProjectProject;
       'api::template-course.template-course': ApiTemplateCourseTemplateCourse;
       'api::template-lesson.template-lesson': ApiTemplateLessonTemplateLesson;
-      'api::template-project.template-project': ApiTemplateProjectTemplateProject;
       'api::workshop.workshop': ApiWorkshopWorkshop;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

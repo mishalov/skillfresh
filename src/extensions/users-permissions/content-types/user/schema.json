@@ -83,12 +83,6 @@
       "target": "api::lead.lead",
       "inversedBy": "user"
     },
-    "projects": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::project.project",
-      "inversedBy": "users"
-    },
     "coursesAsStudent": {
       "type": "relation",
       "relation": "manyToMany",
@@ -120,6 +114,12 @@
     },
     "tempPassword": {
       "type": "string"
+    },
+    "projectResults": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::project-result.project-result",
+      "mappedBy": "student"
     }
   }
 }

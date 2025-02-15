@@ -4,7 +4,7 @@
   "info": {
     "singularName": "project",
     "pluralName": "projects",
-    "displayName": "project"
+    "displayName": "Project"
   },
   "options": {
     "draftAndPublish": false
@@ -15,10 +15,6 @@
       "type": "string",
       "required": true
     },
-    "deadline": {
-      "type": "date",
-      "required": true
-    },
     "notionLink": {
       "type": "string",
       "required": true
@@ -26,19 +22,35 @@
     "description": {
       "type": "text"
     },
-    "complete": {
-      "type": "boolean",
-      "default": false,
-      "required": true
+    "innerDescription": {
+      "type": "text",
+      "private": true
     },
-    "reviewResult": {
-      "type": "blocks"
+    "cover": {
+      "allowedTypes": [
+        "images",
+        "files"
+      ],
+      "type": "media",
+      "multiple": false
     },
-    "users": {
+    "templateCourse": {
       "type": "relation",
-      "relation": "manyToMany",
-      "target": "plugin::users-permissions.user",
-      "mappedBy": "projects"
+      "relation": "manyToOne",
+      "target": "api::template-course.template-course",
+      "inversedBy": "projects"
+    },
+    "course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course.course",
+      "inversedBy": "projects"
+    },
+    "project_results": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::project-result.project-result",
+      "mappedBy": "project"
     }
   }
 }

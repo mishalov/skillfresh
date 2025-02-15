@@ -71,12 +71,6 @@
       "type": "integer",
       "min": 0
     },
-    "templateProjects": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::template-project.template-project",
-      "inversedBy": "courses"
-    },
     "fullPrice": {
       "type": "component",
       "repeatable": false,
@@ -110,7 +104,8 @@
     "slug": {
       "type": "uid",
       "targetField": "name",
-      "required": false
+      "required": false,
+      "alwayGenerate": true
     },
     "cover": {
       "type": "media",
@@ -133,6 +128,12 @@
     },
     "discordLink": {
       "type": "string"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::project.project",
+      "mappedBy": "course"
     }
   }
 }
