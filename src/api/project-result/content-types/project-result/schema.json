@@ -16,9 +16,6 @@
       "type": "date",
       "required": false
     },
-    "reviewResult": {
-      "type": "blocks"
-    },
     "revealed": {
       "type": "boolean",
       "default": false,
@@ -34,7 +31,7 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "projectResults"
+      "inversedBy": "projectResultsAsStudent"
     },
     "state": {
       "type": "enumeration",
@@ -45,6 +42,26 @@
       ],
       "required": true,
       "default": "In Progress"
+    },
+    "result": {
+      "type": "richtext"
+    },
+    "resultFiles": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "reviewers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "projectResultsAsReviewer"
+    },
+    "review": {
+      "type": "richtext"
     }
   }
 }

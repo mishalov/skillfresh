@@ -5,15 +5,17 @@ export default ({ strapi }: { strapi: Core.Strapi }) => {
     async assignProject({
       studentDocumentId,
       projectDocumentId,
+      reviewers,
     }: {
       studentDocumentId: string;
       projectDocumentId: string;
+      reviewers: string[];
     }) {
       const student = await strapi
         .documents("plugin::users-permissions.user")
         .findOne({
           documentId: studentDocumentId,
-          populate: ["projectResults"],
+          populate: ["projectResultsAsStudent"],
         });
 
       if (!student) {
@@ -36,16 +38,20 @@ export default ({ strapi }: { strapi: Core.Strapi }) => {
             student,
             state: "In Progress",
             revealed: true,
+            reviewers,
           },
         });
 
       return strapi.documents("plugin::users-permissions.user").update({
         documentId: studentDocumentId,
         data: {
-          projectResults: [...student.projectResults, projectResult],
+          projectResultsAsStudent: [
+            ...student.projectResultsAsStudent,
+            projectResult,
+          ],
         },
         populate: {
-          projectResults: {
+          projectResultsAsStudent: {
             populate: ["project"],
           },
         },

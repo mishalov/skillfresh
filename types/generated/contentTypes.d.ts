@@ -800,10 +800,16 @@ export interface ApiProjectResultProjectResult
       Schema.Attribute.Private;
     project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
+    result: Schema.Attribute.RichText;
+    resultFiles: Schema.Attribute.Media<'files', true>;
     revealed: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
-    reviewResult: Schema.Attribute.Blocks;
+    review: Schema.Attribute.RichText;
+    reviewers: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
     state: Schema.Attribute.Enumeration<
       ['In Progress', 'In Review', 'Completed']
     > &
@@ -1540,7 +1546,11 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    projectResults: Schema.Attribute.Relation<
+    projectResultsAsReviewer: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::project-result.project-result'
+    >;
+    projectResultsAsStudent: Schema.Attribute.Relation<
       'oneToMany',
       'api::project-result.project-result'
     >;

@@ -115,11 +115,17 @@
     "tempPassword": {
       "type": "string"
     },
-    "projectResults": {
+    "projectResultsAsStudent": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::project-result.project-result",
       "mappedBy": "student"
+    },
+    "projectResultsAsReviewer": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project-result.project-result",
+      "mappedBy": "reviewers"
     }
   }
 }

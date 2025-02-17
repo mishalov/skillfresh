@@ -104,7 +104,7 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
         },
         students: {
           populate: {
-            projectResults: {
+            projectResultsAsStudent: {
               populate: "*",
             },
           },
@@ -120,10 +120,11 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
 
     course.students = course.students.map((student) => ({
       ...student,
-      projectResults: student.projectResults.filter((result) =>
-        course.projects.some(
-          (project) => project.documentId === result.project.documentId
-        )
+      projectResultsAsStudent: student.projectResultsAsStudent.filter(
+        (result) =>
+          course.projects.some(
+            (project) => project.documentId === result.project.documentId
+          )
       ),
     }));
 

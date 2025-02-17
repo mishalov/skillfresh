@@ -19,8 +19,10 @@ export default {
       throw new Error("Only teachers and admins can assign projects");
     }
 
-    return strapi
-      .service("api::student.update")
-      .assignProject({ studentDocumentId: documentId, projectDocumentId });
+    return strapi.service("api::student.update").assignProject({
+      studentDocumentId: documentId,
+      projectDocumentId,
+      reviewers: [user.documentId],
+    });
   },
 };
