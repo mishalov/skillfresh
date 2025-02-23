@@ -12,4 +12,15 @@ export default factories.createCoreController("api::lead.lead", ({}) => ({
       .service("api::lead.lead")
       .checkLeadStatus(leadDocumentId);
   },
+  async create(ctx) {
+    const { courseDocumentId } = ctx.params;
+
+    return await strapi.documents("api::lead.lead").create({
+      data: {
+        courses: [courseDocumentId],
+        source: "Payment Form",
+        state: "New",
+      },
+    });
+  },
 }));

@@ -17,27 +17,26 @@ export default {
       paymentMethod,
     } = form;
 
-    let lead;
-    if (leadDocumentId) {
-      lead = await strapi.service("api::lead.lead").findOne(leadDocumentId);
+    let lead = leadDocumentId
+      ? await strapi.documents("api::lead.lead").findOne(leadDocumentId)
+      : null;
 
-      if (lead) {
-        strapi.documents("api::lead.lead").update({
-          documentId: leadDocumentId,
-          data: {
-            state: "In Progress",
-          },
-        });
-      } else {
-        lead = await strapi.documents("api::lead.lead").create({
-          data: {
-            source: "checkout",
-            name: `${firstName} ${lastName}`,
-            email,
-            state: "In Progress",
-          },
-        });
-      }
+    if (leadDocumentId && lead) {
+      lead = await strapi.documents("api::lead.lead").update({
+        documentId: leadDocumentId,
+        data: {
+          state: "In Progress",
+        },
+      });
+    } else {
+      lead = await strapi.documents("api::lead.lead").create({
+        data: {
+          source: "checkout",
+          name: `${firstName} ${lastName}`,
+          email,
+          state: "In Progress",
+        },
+      });
     }
 
     const course = await strapi
