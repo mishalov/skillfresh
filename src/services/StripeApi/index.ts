@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 
-export const stripeApi = new Stripe(process.env.STRIPE_KEY);
+export const stripeApi = new Stripe(strapi.config.get("services.stripeKey"));
 
 export const createStripeFullPriceProduct = async (
   courseTemplateName: string

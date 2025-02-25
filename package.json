@@ -7,6 +7,7 @@
     "build": "strapi build",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
+    "test": "strapi test",
     "seed:example": "node ./scripts/seed.js",
     "start": "strapi start",
     "strapi": "strapi"
@@ -22,7 +23,7 @@
     "fs-extra": "^10.0.0",
     "mime-types": "^2.1.27",
     "node-telegram-bot-api": "^0.66.0",
-    "pg": "8.8.0",
+    "pg": "^8.8.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",

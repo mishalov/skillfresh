@@ -10,6 +10,17 @@ services:
       - POSTGRES_USER=skillfresh
       - POSTGRES_DB=skillfresh
 
+  strapi-crm-test:
+    image: postgres:14-alpine
+    ports:
+      - 54321:5432
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=skillfresh-test
+      - POSTGRES_USER=skillfresh-test
+      - POSTGRES_DB=skillfresh-test
+
   adminer:
     image: adminer
     ports:

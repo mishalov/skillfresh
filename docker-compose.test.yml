@@ -1,0 +1,50 @@
+version: "3"
+
+services:
+  strapi-pg-db-test:
+    image: postgres:14.5-alpine
+    networks:
+      - strapi-crm-test
+    ports:
+      - 5432:5432
+    volumes:
+      - strapi-crm-test-data:/var/lib/postgresql/data/ #using a volume
+    environment:
+      - POSTGRES_PASSWORD=skillfresh
+      - POSTGRES_USER=skillfresh
+      - POSTGRES_DB=skillfresh
+
+  backend-test:
+    build: .
+    image: crm-strapi:latest
+    env_file: .test.env
+    ports:
+      - 1337:1337
+    volumes:
+      - ./config:/opt/app/config
+      - ./src:/opt/app/src
+      - ./package.json:/opt/app/package.json
+      - ./.test.env:/opt/app/.env
+      - ./types:/opt/app/types
+      - ./public:/opt/app/public
+    networks:
+      - strapi-crm-test
+    depends_on:
+      - strapi-pg-db-test
+
+  adminer:
+    image: adminer
+    ports:
+      - 7777:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: skillfresh
+    depends_on:
+      - strapi-pg-db-test
+
+volumes:
+  strapi-crm-test-data:
+
+networks:
+  strapi-crm-test:
+    name: Strapi-crm-test
+    driver: bridge
