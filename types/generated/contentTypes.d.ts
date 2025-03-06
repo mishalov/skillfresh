@@ -648,7 +648,6 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::feedback.feedback'
     >;
-    innerInfo: Schema.Attribute.RichText & Schema.Attribute.Private;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

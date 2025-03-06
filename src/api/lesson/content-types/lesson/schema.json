@@ -21,10 +21,6 @@
       "min": 15,
       "default": 60
     },
-    "innerInfo": {
-      "type": "richtext",
-      "private": true
-    },
     "course": {
       "type": "relation",
       "relation": "manyToOne",

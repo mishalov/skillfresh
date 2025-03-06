@@ -183,7 +183,6 @@ export default factories.createCoreService(
             $gte: new Date(),
           },
         },
-        select: ["documentId"],
       });
 
       return Promise.all(

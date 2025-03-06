@@ -7,8 +7,8 @@
     "build": "strapi build",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
-    "test": "strapi test",
-    "seed:example": "node ./scripts/seed.js",
+    "test": "NODE_ENV=test strapi import --file ./initial-seed.tar.gz --force && NODE_ENV=test strapi develop ",
+    "import": "NODE_ENV=test strapi import -f ./initial-seed.tar.gz --force",
     "start": "strapi start",
     "strapi": "strapi"
   },

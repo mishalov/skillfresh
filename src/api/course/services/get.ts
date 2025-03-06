@@ -32,9 +32,13 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
   },
 
   async courses(userDocumentId, role: "teacher" | "student" | "admin") {
+    if (role === "admin") {
+      return await strapi.documents("api::course.course").findMany();
+    }
+
     const populate = [];
 
-    if (role === "teacher" || role === "admin") {
+    if (role === "teacher") {
       populate.push("coursesAsTeacher");
     }
 
@@ -100,7 +104,9 @@ export default ({ strapi }: { strapi: Core.Strapi }) => ({
       documentId,
       populate: {
         lessons: {
-          populate: "*",
+          populate: {
+            chapter: {},
+          },
         },
         students: {
           populate: {
